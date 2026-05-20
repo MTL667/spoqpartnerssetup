@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useApi } from '../hooks/useApi';
 import { Card } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
@@ -31,6 +31,7 @@ export function AdminUsers() {
   const [importing, setImporting] = useState(false);
   const [importResult, setImportResult] = useState<ImportResult | null>(null);
   const [importError, setImportError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   async function handleImport(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -83,12 +84,12 @@ export function AdminUsers() {
               Upload een Partner Overview & Onboarding Excel (.xlsx) om partners en taken te importeren.
             </p>
           </div>
-          <label style={{ cursor: importing ? 'wait' : 'pointer' }}>
-            <Button disabled={importing}>
+          <div>
+            <Button disabled={importing} onClick={() => fileInputRef.current?.click()}>
               {importing ? 'Importeren...' : 'Excel uploaden'}
             </Button>
-            <input type="file" accept=".xlsx,.xls" style={{ display: 'none' }} onChange={handleImport} disabled={importing} />
-          </label>
+            <input ref={fileInputRef} type="file" accept=".xlsx,.xls" style={{ display: 'none' }} onChange={handleImport} disabled={importing} />
+          </div>
         </div>
         {importError && (
           <div style={{ marginTop: 12, padding: '8px 12px', background: '#fef2f2', color: '#dc2626', borderRadius: 6, fontSize: 13 }}>
