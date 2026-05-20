@@ -7,22 +7,20 @@ COPY apps/api/package.json apps/api/
 COPY apps/web/package.json apps/web/
 RUN npm ci || npm install
 
-FROM base AS development
-COPY --from=deps /app/node_modules ./node_modules
-COPY . .
-WORKDIR /app/apps/api
-RUN npx prisma generate
-CMD ["npm", "run", "dev"]
-
 FROM base AS build
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+# Build frontend
+WORKDIR /app/apps/web
+RUN npx vite build
+# Build API
 WORKDIR /app/apps/api
 RUN npx prisma generate
 RUN npm run build
 
 FROM base AS production
 COPY --from=build /app/apps/api/dist ./dist
+COPY --from=build /app/apps/web/dist ./public
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/apps/api/prisma ./prisma
 COPY --from=build /app/apps/api/package.json ./
