@@ -9,6 +9,9 @@ import { Redis } from 'ioredis';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  const expressApp = app.getHttpAdapter().getInstance();
+  expressApp.set('trust proxy', 1);
+
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 
   const redisClient = new Redis(process.env.REDIS_URL || 'redis://localhost:6379');
