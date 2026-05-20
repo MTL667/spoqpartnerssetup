@@ -1,0 +1,90 @@
+# generated: 2026-05-20
+# last_updated: 2026-05-20
+# project: SPOQpartnersSetup
+# project_key: NOKEY
+# tracking_system: file-system
+# story_location: {project-root}/_bmad-output/implementation-artifacts
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+#
+# Epic Status Transitions:
+#   - backlog → in-progress: Automatically when first story is created (via create-story)
+#   - in-progress → done: Manually when all stories reach 'done' status
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created in stories folder
+#   - in-progress: Developer actively working on implementation
+#   - review: Ready for code review (via Dev's code-review workflow)
+#   - done: Story completed
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+#
+# WORKFLOW NOTES:
+# ===============
+# - Epic transitions to 'in-progress' automatically when first story is created
+# - Stories can be worked in parallel if team capacity allows
+# - Developer typically creates next story after previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
+#
+# DEPLOYMENT NOTES:
+# =================
+# - Target platform: EasyPanel (Docker containers)
+# - Source control: GitHub
+# - CI/CD: GitHub → EasyPanel deployment pipeline
+
+generated: 2026-05-20
+last_updated: 2026-05-20T09:00
+project: SPOQpartnersSetup
+project_key: NOKEY
+tracking_system: file-system
+story_location: "{project-root}/_bmad-output/implementation-artifacts"
+
+development_status:
+  # ── Epic 1 — Secure Foundation and Access Control ──
+  epic-1: done
+  1-1-user-authentication-and-session-timeout: done
+  1-2-admin-user-lifecycle-management: done
+  1-3-role-based-access-matrix-enforcement: done
+  1-4-future-business-developer-scoped-access: done
+  epic-1-retrospective: optional
+
+  # ── Epic 2 — Onboarding Process Engine ──
+  epic-2: done
+  2-1-create-onboarding-from-configuration: done
+  2-2-generate-task-hierarchy-from-template: done
+  2-3-backward-planning-from-go-live-date: done
+  2-4-task-dependency-and-status-engine: done
+  2-5-deliverable-chain-and-auto-unblock: done
+  2-6-checklist-based-trust-completion: done
+  epic-2-retrospective: optional
+
+  # ── Epic 3 — Operational Visibility and Collaboration ──
+  epic-3: done
+  3-1-alert-driven-bdm-dashboard: done
+  3-2-personal-task-notification-center: done
+  3-3-commenting-and-mention-collaboration: done
+  3-4-outlook-email-notification-delivery: done
+  epic-3-retrospective: optional
+
+  # ── Epic 4 — Partner Portal Experience ──
+  epic-4: done
+  4-1-partner-invitation-and-login: done
+  4-2-partner-progress-and-action-view: done
+  4-3-partner-upload-and-response-loop: done
+  epic-4-retrospective: optional
+
+  # ── Epic 5 — Lifecycle and Configuration Governance ──
+  epic-5: done
+  5-1-template-management-by-bdm: done
+  5-2-active-vs-future-onboarding-isolation: done
+  5-3-phase-model-and-archival-integrity: done
+  5-4-bilingual-experience-toggle: done
+  epic-5-retrospective: optional

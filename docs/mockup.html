@@ -1,0 +1,1890 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPOQ Partner Onboarding</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+<style>
+:root {
+  --primary: #1e40af;
+  --primary-light: #3b82f6;
+  --primary-bg: #eff6ff;
+  --danger: #dc2626;
+  --danger-bg: #fef2f2;
+  --warning: #f59e0b;
+  --warning-bg: #fffbeb;
+  --success: #16a34a;
+  --success-bg: #f0fdf4;
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+  --sidebar-w: 240px;
+  --header-h: 56px;
+  --radius: 8px;
+  --shadow: 0 1px 3px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,.1), 0 4px 6px rgba(0,0,0,.05);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Inter',system-ui,sans-serif; background:var(--gray-50); color:var(--gray-800); font-size:14px; line-height:1.5; }
+button { font-family:inherit; cursor:pointer; }
+input, select, textarea { font-family:inherit; font-size:14px; }
+
+/* Layout */
+.app { display:flex; height:100vh; overflow:hidden; }
+.sidebar { width:var(--sidebar-w); background:var(--gray-900); color:#fff; display:flex; flex-direction:column; flex-shrink:0; }
+.sidebar-logo { padding:16px 20px; font-size:18px; font-weight:700; border-bottom:1px solid var(--gray-700); display:flex; align-items:center; gap:10px; }
+.sidebar-logo img { width:28px; height:28px; border-radius:6px; }
+.sidebar-nav { flex:1; padding:12px 0; overflow-y:auto; }
+.nav-section { padding:8px 20px 4px; font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--gray-400); font-weight:600; }
+.nav-item { display:flex; align-items:center; gap:10px; padding:8px 20px; color:var(--gray-300); text-decoration:none; cursor:pointer; transition:.15s; font-size:13px; }
+.nav-item:hover { background:rgba(255,255,255,.08); color:#fff; }
+.nav-item.active { background:var(--primary); color:#fff; border-radius:0; }
+.nav-item i { width:18px; text-align:center; font-size:14px; }
+.nav-badge { margin-left:auto; background:var(--danger); color:#fff; font-size:11px; font-weight:600; padding:1px 7px; border-radius:10px; }
+.sidebar-user { padding:12px 20px; border-top:1px solid var(--gray-700); display:flex; align-items:center; gap:10px; }
+.sidebar-user .avatar { width:32px; height:32px; border-radius:50%; background:var(--primary-light); display:flex; align-items:center; justify-content:center; font-weight:600; font-size:13px; }
+.sidebar-user .user-info { flex:1; }
+.sidebar-user .user-name { font-size:13px; font-weight:500; }
+.sidebar-user .user-role { font-size:11px; color:var(--gray-400); }
+
+.main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+.header { height:var(--header-h); background:#fff; border-bottom:1px solid var(--gray-200); display:flex; align-items:center; padding:0 24px; gap:16px; flex-shrink:0; }
+.header-title { font-size:18px; font-weight:600; }
+.header-actions { margin-left:auto; display:flex; align-items:center; gap:12px; }
+.content { flex:1; overflow-y:auto; padding:24px; }
+
+/* Cards */
+.card { background:#fff; border-radius:var(--radius); box-shadow:var(--shadow); border:1px solid var(--gray-200); }
+.card-header { padding:16px 20px; border-bottom:1px solid var(--gray-100); display:flex; align-items:center; justify-content:space-between; }
+.card-header h3 { font-size:15px; font-weight:600; }
+.card-body { padding:16px 20px; }
+
+/* Buttons */
+.btn { display:inline-flex; align-items:center; gap:6px; padding:8px 16px; border-radius:6px; font-size:13px; font-weight:500; border:1px solid transparent; transition:.15s; }
+.btn-primary { background:var(--primary); color:#fff; }
+.btn-primary:hover { background:#1d4ed8; }
+.btn-secondary { background:#fff; color:var(--gray-700); border-color:var(--gray-300); }
+.btn-secondary:hover { background:var(--gray-50); }
+.btn-danger { background:var(--danger); color:#fff; }
+.btn-sm { padding:5px 10px; font-size:12px; }
+.btn-success { background:var(--success); color:#fff; }
+.btn-warning { background:var(--warning); color:#fff; }
+
+/* Stats */
+.stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin-bottom:24px; }
+.stat-card { background:#fff; border-radius:var(--radius); box-shadow:var(--shadow); padding:20px; border:1px solid var(--gray-200); border-left:4px solid var(--gray-300); }
+.stat-card.red { border-left-color:var(--danger); }
+.stat-card.orange { border-left-color:var(--warning); }
+.stat-card.green { border-left-color:var(--success); }
+.stat-card.blue { border-left-color:var(--primary-light); }
+.stat-value { font-size:28px; font-weight:700; }
+.stat-label { font-size:12px; color:var(--gray-500); margin-top:2px; }
+
+/* Tables */
+.table-wrap { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; }
+th { text-align:left; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.04em; color:var(--gray-500); padding:10px 16px; border-bottom:2px solid var(--gray-200); }
+td { padding:12px 16px; border-bottom:1px solid var(--gray-100); font-size:13px; }
+tr:hover td { background:var(--gray-50); }
+tr.clickable { cursor:pointer; }
+
+/* Badges */
+.badge { display:inline-flex; align-items:center; gap:4px; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:600; }
+.badge-red { background:var(--danger-bg); color:var(--danger); }
+.badge-orange { background:var(--warning-bg); color:#b45309; }
+.badge-green { background:var(--success-bg); color:var(--success); }
+.badge-blue { background:var(--primary-bg); color:var(--primary); }
+.badge-gray { background:var(--gray-100); color:var(--gray-500); }
+
+/* Status dot */
+.status-dot { width:8px; height:8px; border-radius:50%; display:inline-block; }
+.dot-red { background:var(--danger); }
+.dot-orange { background:var(--warning); }
+.dot-green { background:var(--success); }
+.dot-blue { background:var(--primary-light); }
+.dot-gray { background:var(--gray-300); }
+
+/* Progress bar */
+.progress-bar { background:var(--gray-200); border-radius:6px; height:8px; overflow:hidden; }
+.progress-fill { height:100%; border-radius:6px; transition:width .3s; }
+.progress-fill.green { background:var(--success); }
+.progress-fill.orange { background:var(--warning); }
+.progress-fill.red { background:var(--danger); }
+.progress-fill.blue { background:var(--primary-light); }
+
+/* Phase stepper */
+.phase-stepper { display:flex; align-items:center; gap:0; margin:20px 0; }
+.phase-step { flex:1; text-align:center; position:relative; }
+.phase-step .step-dot { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 6px; font-weight:600; font-size:13px; border:2px solid var(--gray-300); background:#fff; color:var(--gray-400); }
+.phase-step.completed .step-dot { background:var(--success); border-color:var(--success); color:#fff; }
+.phase-step.active .step-dot { background:var(--primary); border-color:var(--primary); color:#fff; }
+.phase-step.blocked .step-dot { background:var(--danger); border-color:var(--danger); color:#fff; }
+.phase-step .step-label { font-size:11px; color:var(--gray-500); }
+.phase-step.active .step-label { color:var(--primary); font-weight:600; }
+.phase-step::after { content:''; position:absolute; top:16px; left:calc(50% + 20px); right:calc(-50% + 20px); height:2px; background:var(--gray-200); }
+.phase-step:last-child::after { display:none; }
+.phase-step.completed::after { background:var(--success); }
+
+/* Tabs */
+.tabs { display:flex; border-bottom:2px solid var(--gray-200); margin-bottom:20px; }
+.tab { padding:10px 20px; font-size:13px; font-weight:500; color:var(--gray-500); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; transition:.15s; }
+.tab:hover { color:var(--gray-700); }
+.tab.active { color:var(--primary); border-bottom-color:var(--primary); }
+
+/* Forms */
+.form-group { margin-bottom:16px; }
+.form-label { display:block; font-size:13px; font-weight:500; color:var(--gray-700); margin-bottom:4px; }
+.form-input, .form-select { width:100%; padding:8px 12px; border:1px solid var(--gray-300); border-radius:6px; font-size:14px; transition:.15s; }
+.form-input:focus, .form-select:focus { outline:none; border-color:var(--primary-light); box-shadow:0 0 0 3px rgba(59,130,246,.15); }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+
+/* Modal */
+.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:1000; display:flex; align-items:center; justify-content:center; animation:fadeIn .15s; }
+.modal { background:#fff; border-radius:12px; box-shadow:var(--shadow-lg); max-width:600px; width:90%; max-height:85vh; overflow-y:auto; }
+.modal-header { padding:20px 24px; border-bottom:1px solid var(--gray-200); display:flex; align-items:center; justify-content:space-between; }
+.modal-header h2 { font-size:17px; font-weight:600; }
+.modal-close { background:none; border:none; font-size:20px; color:var(--gray-400); cursor:pointer; }
+.modal-body { padding:20px 24px; }
+.modal-footer { padding:16px 24px; border-top:1px solid var(--gray-200); display:flex; justify-content:flex-end; gap:8px; }
+
+/* Checklist */
+.checklist { list-style:none; }
+.checklist-item { display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--gray-100); }
+.checklist-item:last-child { border-bottom:none; }
+.checklist-item input[type="checkbox"] { width:18px; height:18px; accent-color:var(--primary); cursor:pointer; }
+.checklist-item.done label { text-decoration:line-through; color:var(--gray-400); }
+.checklist-item label { cursor:pointer; flex:1; }
+.checklist-item .meta { font-size:11px; color:var(--gray-400); }
+
+/* Comments */
+.comment { display:flex; gap:12px; padding:12px 0; border-bottom:1px solid var(--gray-100); }
+.comment:last-child { border-bottom:none; }
+.comment .avatar-sm { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:600; font-size:12px; flex-shrink:0; }
+.comment .comment-body { flex:1; }
+.comment .comment-author { font-weight:600; font-size:13px; }
+.comment .comment-time { font-size:11px; color:var(--gray-400); margin-left:8px; }
+.comment .comment-text { margin-top:4px; font-size:13px; }
+.comment .mention { color:var(--primary); font-weight:500; }
+
+/* Alerts panel */
+.alert-row { display:flex; align-items:center; gap:12px; padding:12px 16px; border-radius:6px; margin-bottom:8px; cursor:pointer; transition:.15s; }
+.alert-row:hover { transform:translateX(4px); }
+.alert-row.severity-red { background:var(--danger-bg); border-left:3px solid var(--danger); }
+.alert-row.severity-orange { background:var(--warning-bg); border-left:3px solid var(--warning); }
+.alert-row.severity-green { background:var(--success-bg); border-left:3px solid var(--success); }
+.alert-icon { font-size:18px; width:24px; text-align:center; }
+.alert-content { flex:1; }
+.alert-partner { font-weight:600; font-size:13px; }
+.alert-reason { font-size:12px; color:var(--gray-600); margin-top:2px; }
+.alert-meta { text-align:right; }
+.alert-owner { font-size:12px; color:var(--gray-500); }
+.alert-days { font-size:11px; font-weight:600; }
+
+/* Notification list */
+.notif-item { display:flex; align-items:flex-start; gap:12px; padding:12px 16px; border-bottom:1px solid var(--gray-100); cursor:pointer; transition:.15s; }
+.notif-item:hover { background:var(--gray-50); }
+.notif-item.unread { background:var(--primary-bg); }
+.notif-icon { width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
+.notif-content { flex:1; }
+.notif-title { font-size:13px; font-weight:500; }
+.notif-desc { font-size:12px; color:var(--gray-500); margin-top:2px; }
+.notif-time { font-size:11px; color:var(--gray-400); white-space:nowrap; }
+
+/* Task tree */
+.task-tree { }
+.task-group { margin-bottom:16px; }
+.task-group-header { display:flex; align-items:center; gap:10px; padding:10px 16px; background:var(--gray-50); border-radius:6px; cursor:pointer; font-weight:600; font-size:14px; }
+.task-group-header i.caret { transition:transform .2s; }
+.task-group-header.open i.caret { transform:rotate(90deg); }
+.subtask-list { padding:8px 0 8px 40px; }
+.subtask { display:flex; align-items:center; gap:10px; padding:8px 12px; border-radius:4px; cursor:pointer; transition:.1s; }
+.subtask:hover { background:var(--gray-50); }
+.subtask input[type="checkbox"] { width:16px; height:16px; accent-color:var(--primary); }
+.subtask .subtask-name { flex:1; font-size:13px; }
+.subtask .subtask-assignee { font-size:12px; color:var(--gray-500); }
+.subtask .subtask-due { font-size:12px; color:var(--gray-400); }
+.subtask.done .subtask-name { text-decoration:line-through; color:var(--gray-400); }
+.subtask.blocked { opacity:.6; }
+
+/* Deliverables */
+.deliverable { display:flex; align-items:center; gap:10px; padding:10px 12px; border:1px solid var(--gray-200); border-radius:6px; margin-bottom:8px; }
+.deliverable i { font-size:16px; }
+.deliverable.fulfilled i { color:var(--success); }
+.deliverable.missing i { color:var(--warning); }
+.deliverable .del-name { flex:1; font-size:13px; }
+.deliverable .del-status { font-size:12px; }
+
+/* Partner portal specific */
+.portal-header { background:linear-gradient(135deg, var(--primary) 0%, #7c3aed 100%); color:#fff; padding:32px; border-radius:var(--radius); margin-bottom:24px; }
+.portal-header h1 { font-size:24px; font-weight:700; }
+.portal-header p { opacity:.85; margin-top:4px; }
+
+/* Blurred tasks (Marketing pattern) */
+.task-blurred { filter:blur(1.5px) opacity(.5); pointer-events:none; transition:filter .2s; }
+.task-blurred:hover { filter:blur(0) opacity(1); pointer-events:auto; }
+
+/* Toast */
+.toast { position:fixed; bottom:24px; right:24px; background:var(--gray-800); color:#fff; padding:12px 20px; border-radius:8px; box-shadow:var(--shadow-lg); z-index:2000; display:flex; align-items:center; gap:10px; animation:slideUp .3s; font-size:13px; }
+.toast.success { background:#065f46; }
+.toast.error { background:var(--danger); }
+.toast i { font-size:16px; }
+
+/* Animations */
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+@keyframes slideUp { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
+
+/* Language toggle */
+.lang-toggle { display:flex; border:1px solid var(--gray-300); border-radius:6px; overflow:hidden; }
+.lang-btn { padding:4px 10px; font-size:12px; font-weight:500; background:#fff; border:none; cursor:pointer; }
+.lang-btn.active { background:var(--primary); color:#fff; }
+
+/* Search */
+.search-box { display:flex; align-items:center; background:#fff; border:1px solid var(--gray-300); border-radius:6px; padding:0 10px; }
+.search-box i { color:var(--gray-400); font-size:14px; }
+.search-box input { border:none; outline:none; padding:7px 8px; font-size:13px; width:200px; }
+
+/* File upload area */
+.upload-area { border:2px dashed var(--gray-300); border-radius:8px; padding:32px; text-align:center; color:var(--gray-500); cursor:pointer; transition:.15s; }
+.upload-area:hover { border-color:var(--primary-light); background:var(--primary-bg); color:var(--primary); }
+.upload-area i { font-size:32px; display:block; margin-bottom:8px; }
+
+/* Template editor */
+.template-phase { border:1px solid var(--gray-200); border-radius:8px; margin-bottom:12px; }
+.template-phase-header { padding:12px 16px; background:var(--gray-50); border-radius:8px 8px 0 0; font-weight:600; display:flex; align-items:center; justify-content:space-between; cursor:pointer; }
+.template-tasks { padding:8px 16px 12px; }
+.template-task { display:flex; align-items:center; gap:8px; padding:6px 0; font-size:13px; border-bottom:1px solid var(--gray-100); }
+.template-task:last-child { border-bottom:none; }
+
+/* Grid layouts */
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; }
+
+/* Responsive scroll */
+.page { display:none; }
+.page.active { display:block; }
+
+/* Role switch bar */
+.role-bar { background:var(--warning-bg); border:1px solid #fcd34d; border-radius:6px; padding:8px 16px; margin-bottom:16px; display:flex; align-items:center; gap:12px; font-size:13px; }
+.role-bar i { color:#b45309; }
+.role-select { padding:4px 8px; border:1px solid #fcd34d; border-radius:4px; font-size:12px; background:#fff; }
+
+/* Tooltip */
+[data-tooltip] { position:relative; }
+[data-tooltip]:hover::after { content:attr(data-tooltip); position:absolute; bottom:100%; left:50%; transform:translateX(-50%); background:var(--gray-800); color:#fff; padding:4px 8px; border-radius:4px; font-size:11px; white-space:nowrap; z-index:100; }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div style="width:28px;height:28px;background:var(--primary-light);border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;">S</div>
+      <span>SPOQ Onboarding</span>
+    </div>
+    <nav class="sidebar-nav" id="sidebarNav"></nav>
+    <div class="sidebar-user" id="sidebarUser"></div>
+  </aside>
+
+  <!-- Main content -->
+  <div class="main">
+    <header class="header" id="headerBar"></header>
+    <div class="content" id="contentArea"></div>
+  </div>
+</div>
+
+<!-- Toast container -->
+<div id="toastContainer"></div>
+
+<script>
+// =====================================================
+// DATA MODEL
+// =====================================================
+
+const LANG = { current: 'nl' };
+
+const T = {
+  nl: {
+    dashboard: 'Dashboard',
+    partners: 'Partners',
+    tasks: 'Taken',
+    notifications: 'Meldingen',
+    templates: 'Templates',
+    admin: 'Beheer',
+    settings: 'Instellingen',
+    partnerPortal: 'Partner Portaal',
+    newOnboarding: 'Nieuwe Onboarding',
+    allPartners: 'Alle Partners',
+    blocked: 'Geblokkeerd',
+    overdue: 'Verlopen',
+    atRisk: 'Risico',
+    onTrack: 'Op schema',
+    completed: 'Afgerond',
+    active: 'Actief',
+    notActive: 'Niet actief',
+    phase: 'Fase',
+    goLiveDate: 'Go-live datum',
+    integrationType: 'Integratie Type',
+    contractType: 'Contract Type',
+    assignee: 'Verantwoordelijke',
+    deadline: 'Deadline',
+    status: 'Status',
+    actions: 'Acties',
+    save: 'Opslaan',
+    cancel: 'Annuleren',
+    create: 'Aanmaken',
+    edit: 'Bewerken',
+    delete: 'Verwijderen',
+    search: 'Zoeken...',
+    language: 'Taal',
+    role: 'Rol',
+    users: 'Gebruikers',
+    addUser: 'Gebruiker toevoegen',
+    addComment: 'Reactie toevoegen',
+    uploadFiles: 'Bestanden uploaden',
+    deliverables: 'Deliverables',
+    checklist: 'Checklist',
+    comments: 'Reacties',
+    progress: 'Voortgang',
+    dependencies: 'Afhankelijkheden',
+    prerequisitesMet: 'Vereisten voldaan',
+    prerequisitesMissing: 'Vereisten ontbreken',
+    taskCompleted: 'Taak afgerond!',
+    alertsTitle: 'Aandachtspunten',
+    todayTasks: 'Taken voor vandaag',
+    recentActivity: 'Recente activiteit',
+    partnerDetails: 'Partner Details',
+    onboardingPhases: 'Onboarding Fases',
+    createOnboarding: 'Onboarding Aanmaken',
+    selectIntType: 'Selecteer integratie type',
+    selectConType: 'Selecteer contract type',
+    formsErp: 'Forms ERP',
+    partnerPortalInt: 'Partner Portal',
+    apiIntegration: 'API Integratie',
+    expertPartner: 'Expert-Partner',
+    softwarePartner: 'Software-Partner',
+    companyName: 'Bedrijfsnaam',
+    contactPerson: 'Contactpersoon',
+    contactEmail: 'E-mail contactpersoon',
+    country: 'Land',
+    activated: 'Geactiveerd',
+    viewAs: 'Bekijk als',
+    phase1: 'Contract & Compliance',
+    phase2: 'Technische Setup',
+    phase3: 'Content & Marketing',
+    phase4: 'Go-to-Market',
+    phase5: 'Go-Live & Overdracht',
+    archiveLabel: 'Archief',
+    archivedOnboardings: 'Gearchiveerde onboardings',
+    templateEditor: 'Template Editor',
+    createTemplate: 'Template Aanmaken',
+    publishTemplate: 'Template Publiceren',
+    versionHistory: 'Versie Geschiedenis',
+    futureOnly: 'Wijzigingen gelden alleen voor toekomstige onboardings',
+    userManagement: 'Gebruikersbeheer',
+    roleAssignment: 'Roltoewijzing',
+    deactivate: 'Deactiveren',
+    activate: 'Activeren',
+    blocked_by: 'Geblokkeerd door',
+    days_overdue: 'dagen verlopen',
+    owner: 'Eigenaar',
+    noAlerts: 'Geen aandachtspunten — alles op schema!',
+    welcomePortal: 'Welkom bij uw onboarding portaal',
+    portalDesc: 'Hier vindt u de voortgang van uw onboarding en openstaande actiepunten.',
+    yourActions: 'Uw actiepunten',
+    yourProgress: 'Uw voortgang',
+    uploadHere: 'Sleep bestanden hierheen of klik om te uploaden',
+    fileUploaded: 'Bestand geüpload!',
+    switchLang: 'Taal wisselen',
+    newPartner: 'Nieuwe partner',
+    invitePartner: 'Partner uitnodigen',
+    invited: 'Uitgenodigd',
+    backward_planning: 'Deadlines worden automatisch berekend vanaf de go-live datum.',
+    adjustDeadline: 'Deadline aanpassen',
+    reassign: 'Hertoewijzen',
+    markComplete: 'Markeer als afgerond',
+    taskDetail: 'Taak Detail',
+    allTasks: 'Alle taken',
+    myTasks: 'Mijn taken',
+    emailNotif: 'E-mail notificatie verzonden via Outlook',
+    conditional: 'Conditioneel',
+    archived: 'Gearchiveerd',
+  },
+  en: {
+    dashboard: 'Dashboard',
+    partners: 'Partners',
+    tasks: 'Tasks',
+    notifications: 'Notifications',
+    templates: 'Templates',
+    admin: 'Admin',
+    settings: 'Settings',
+    partnerPortal: 'Partner Portal',
+    newOnboarding: 'New Onboarding',
+    allPartners: 'All Partners',
+    blocked: 'Blocked',
+    overdue: 'Overdue',
+    atRisk: 'At Risk',
+    onTrack: 'On Track',
+    completed: 'Completed',
+    active: 'Active',
+    notActive: 'Not Active',
+    phase: 'Phase',
+    goLiveDate: 'Go-live Date',
+    integrationType: 'Integration Type',
+    contractType: 'Contract Type',
+    assignee: 'Assignee',
+    deadline: 'Deadline',
+    status: 'Status',
+    actions: 'Actions',
+    save: 'Save',
+    cancel: 'Cancel',
+    create: 'Create',
+    edit: 'Edit',
+    delete: 'Delete',
+    search: 'Search...',
+    language: 'Language',
+    role: 'Role',
+    users: 'Users',
+    addUser: 'Add User',
+    addComment: 'Add Comment',
+    uploadFiles: 'Upload Files',
+    deliverables: 'Deliverables',
+    checklist: 'Checklist',
+    comments: 'Comments',
+    progress: 'Progress',
+    dependencies: 'Dependencies',
+    prerequisitesMet: 'Prerequisites met',
+    prerequisitesMissing: 'Prerequisites missing',
+    taskCompleted: 'Task completed!',
+    alertsTitle: 'Alerts',
+    todayTasks: 'Tasks for today',
+    recentActivity: 'Recent activity',
+    partnerDetails: 'Partner Details',
+    onboardingPhases: 'Onboarding Phases',
+    createOnboarding: 'Create Onboarding',
+    selectIntType: 'Select integration type',
+    selectConType: 'Select contract type',
+    formsErp: 'Forms ERP',
+    partnerPortalInt: 'Partner Portal',
+    apiIntegration: 'API Integration',
+    expertPartner: 'Expert-Partner',
+    softwarePartner: 'Software-Partner',
+    companyName: 'Company Name',
+    contactPerson: 'Contact Person',
+    contactEmail: 'Contact Email',
+    country: 'Country',
+    activated: 'Activated',
+    viewAs: 'View as',
+    phase1: 'Contract & Compliance',
+    phase2: 'Technical Setup',
+    phase3: 'Content & Marketing',
+    phase4: 'Go-to-Market',
+    phase5: 'Go-Live & Handoff',
+    archiveLabel: 'Archive',
+    archivedOnboardings: 'Archived onboardings',
+    templateEditor: 'Template Editor',
+    createTemplate: 'Create Template',
+    publishTemplate: 'Publish Template',
+    versionHistory: 'Version History',
+    futureOnly: 'Changes apply to future onboardings only',
+    userManagement: 'User Management',
+    roleAssignment: 'Role Assignment',
+    deactivate: 'Deactivate',
+    activate: 'Activate',
+    blocked_by: 'Blocked by',
+    days_overdue: 'days overdue',
+    owner: 'Owner',
+    noAlerts: 'No alerts — everything on track!',
+    welcomePortal: 'Welcome to your onboarding portal',
+    portalDesc: 'Track your onboarding progress and complete action items here.',
+    yourActions: 'Your Action Items',
+    yourProgress: 'Your Progress',
+    uploadHere: 'Drag files here or click to upload',
+    fileUploaded: 'File uploaded!',
+    switchLang: 'Switch Language',
+    newPartner: 'New partner',
+    invitePartner: 'Invite Partner',
+    invited: 'Invited',
+    backward_planning: 'Deadlines are automatically calculated from the go-live date.',
+    adjustDeadline: 'Adjust Deadline',
+    reassign: 'Reassign',
+    markComplete: 'Mark Complete',
+    taskDetail: 'Task Detail',
+    allTasks: 'All tasks',
+    myTasks: 'My tasks',
+    emailNotif: 'Email notification sent via Outlook',
+    conditional: 'Conditional',
+    archived: 'Archived',
+  }
+};
+
+function t(key) { return T[LANG.current][key] || T['en'][key] || key; }
+
+const PHASE_NAMES = () => [t('phase1'), t('phase2'), t('phase3'), t('phase4'), t('phase5')];
+
+const ROLES = ['Admin','BDM','IT','Marketing','Sales','Partner'];
+const INT_TYPES = () => [t('formsErp'), t('partnerPortalInt'), t('apiIntegration')];
+const CON_TYPES = () => [t('expertPartner'), t('softwarePartner')];
+
+let currentUser = { id:'u1', name:'Sarah van der Berg', role:'BDM', initials:'SB', color:'#3b82f6' };
+let currentPage = 'dashboard';
+let selectedPartnerId = null;
+let selectedTaskId = null;
+let portalMode = false;
+
+const USERS = [
+  { id:'u1', name:'Sarah van der Berg', role:'BDM', initials:'SB', color:'#3b82f6', email:'sarah@spoq.nl', locale:'nl', active:true },
+  { id:'u2', name:'Tom Hendriks', role:'IT', initials:'TH', color:'#8b5cf6', email:'tom@spoq.nl', locale:'nl', active:true },
+  { id:'u3', name:'Lisa de Vries', role:'Marketing', initials:'LV', color:'#ec4899', email:'lisa@spoq.nl', locale:'nl', active:true },
+  { id:'u4', name:'Pieter Jansen', role:'Sales', initials:'PJ', color:'#f59e0b', email:'pieter@spoq.nl', locale:'nl', active:true },
+  { id:'u5', name:'Kevin', role:'Admin', initials:'KV', color:'#10b981', email:'kevin@spoq.nl', locale:'nl', active:true },
+  { id:'u6', name:'Marc Dubois', role:'Partner', initials:'MD', color:'#6366f1', email:'marc@techflow.be', locale:'en', active:true, partnerId:'p1' },
+  { id:'u7', name:'Hans Mueller', role:'Partner', initials:'HM', color:'#14b8a6', email:'hans@databridge.de', locale:'en', active:true, partnerId:'p2' },
+  { id:'u8', name:'Jan Willems', role:'Partner', initials:'JW', color:'#f97316', email:'jan@cloudnet.be', locale:'nl', active:true, partnerId:'p3' },
+  { id:'u9', name:'Anna Svensson', role:'Partner', initials:'AS', color:'#06b6d4', email:'anna@nordic.se', locale:'en', active:true, partnerId:'p5' },
+  { id:'u10', name:'Roel Bakker', role:'BDM', initials:'RB', color:'#84cc16', email:'roel@spoq.nl', locale:'nl', active:true },
+];
+
+const PARTNERS = [
+  { id:'p1', company:'TechFlow Solutions', contact:'Marc Dubois', email:'marc@techflow.be', country:'België', intType:'Partner Portal', conType:'Expert-Partner', goLive:'2026-07-15', status:'on_track', phase:3, progress:58, archived:false },
+  { id:'p2', company:'DataBridge GmbH', contact:'Hans Mueller', email:'hans@databridge.de', country:'Duitsland', intType:'API Integration', conType:'Software-Partner', goLive:'2026-06-30', status:'blocked', phase:2, progress:32, archived:false },
+  { id:'p3', company:'CloudNet Belgium', contact:'Jan Willems', email:'jan@cloudnet.be', country:'België', intType:'Forms ERP', conType:'Expert-Partner', goLive:'2026-06-15', status:'overdue', phase:2, progress:40, archived:false },
+  { id:'p4', company:'InnovatieHub BV', contact:'Emma de Groot', email:'emma@innovatiehub.nl', country:'Nederland', intType:'Partner Portal', conType:'Software-Partner', goLive:'2026-08-01', status:'at_risk', phase:1, progress:18, archived:false },
+  { id:'p5', company:'Nordic Systems AB', contact:'Anna Svensson', email:'anna@nordic.se', country:'Zweden', intType:'API Integration', conType:'Expert-Partner', goLive:'2026-09-01', status:'on_track', phase:1, progress:8, archived:false },
+  { id:'p6', company:'Benelux Soft NV', contact:'Luc Peeters', email:'luc@beneluxsoft.be', country:'België', intType:'Forms ERP', conType:'Software-Partner', goLive:'2026-03-01', status:'completed', phase:5, progress:100, archived:true },
+  { id:'p7', company:'Rhine Digital AG', contact:'Klaus Weber', email:'klaus@rhinedigital.de', country:'Duitsland', intType:'Partner Portal', conType:'Expert-Partner', goLive:'2026-02-15', status:'completed', phase:5, progress:100, archived:true },
+];
+
+const TASKS = [
+  // DataBridge (p2) - blocked scenario
+  { id:'t1', partnerId:'p2', phase:2, main:true, name:'API Credentials & Endpoint Setup', assigneeRole:'IT', assigneeId:'u2', status:'blocked', dueDate:'2026-06-05', blockedBy:'t2', subtasks:['t1a','t1b','t1c'], deliverables:['d1'], checklist:[] },
+  { id:'t1a', partnerId:'p2', phase:2, main:false, parentId:'t1', name:'Genereer API keys in testomgeving', assigneeRole:'IT', assigneeId:'u2', status:'blocked', dueDate:'2026-06-05' },
+  { id:'t1b', partnerId:'p2', phase:2, main:false, parentId:'t1', name:'Configureer endpoint whitelisting', assigneeRole:'IT', assigneeId:'u2', status:'blocked', dueDate:'2026-06-07' },
+  { id:'t1c', partnerId:'p2', phase:2, main:false, parentId:'t1', name:'Test API connectiviteit', assigneeRole:'IT', assigneeId:'u2', status:'not_active', dueDate:'2026-06-10' },
+  { id:'t2', partnerId:'p2', phase:1, main:true, name:'Data Processing Agreement (DPA)', assigneeRole:'Partner', assigneeId:'u7', status:'active', dueDate:'2026-05-25', subtasks:[], deliverables:['d2'], checklist:[], prerequisiteFor:['t1'] },
+
+  // CloudNet (p3) - overdue scenario
+  { id:'t3', partnerId:'p3', phase:2, main:true, name:'ERP Formulieren Configuratie', assigneeRole:'IT', assigneeId:'u2', status:'overdue', dueDate:'2026-05-16', subtasks:['t3a','t3b','t3c','t3d','t3e','t3f'], deliverables:[], checklist:[] },
+  { id:'t3a', partnerId:'p3', phase:2, main:false, parentId:'t3', name:'Productcatalogus importeren', assigneeRole:'IT', assigneeId:'u2', status:'completed', dueDate:'2026-05-10', completedAt:'2026-05-09' },
+  { id:'t3b', partnerId:'p3', phase:2, main:false, parentId:'t3', name:'Prijslijst koppelen', assigneeRole:'IT', assigneeId:'u2', status:'completed', dueDate:'2026-05-12', completedAt:'2026-05-11' },
+  { id:'t3c', partnerId:'p3', phase:2, main:false, parentId:'t3', name:'Orderformulier aanmaken', assigneeRole:'IT', assigneeId:'u2', status:'overdue', dueDate:'2026-05-14' },
+  { id:'t3d', partnerId:'p3', phase:2, main:false, parentId:'t3', name:'Testbestelling doorvoeren', assigneeRole:'IT', assigneeId:'u2', status:'not_active', dueDate:'2026-05-16' },
+  { id:'t3e', partnerId:'p3', phase:2, main:false, parentId:'t3', name:'Foutafhandeling valideren', assigneeRole:'IT', assigneeId:'u2', status:'not_active', dueDate:'2026-05-17' },
+  { id:'t3f', partnerId:'p3', phase:2, main:false, parentId:'t3', name:'Go/no-go technische review', assigneeRole:'IT', assigneeId:'u2', status:'not_active', dueDate:'2026-05-18' },
+
+  // CloudNet (p3) - marketing blocked by missing assets
+  { id:'t4', partnerId:'p3', phase:3, main:true, name:'Partner Pagina Aanmaken', assigneeRole:'Marketing', assigneeId:'u3', status:'blocked', dueDate:'2026-05-28', blockedBy:'t5', subtasks:[], deliverables:['d3'] },
+  { id:'t5', partnerId:'p3', phase:3, main:true, name:'Marketing Materialen Aanleveren', assigneeRole:'Partner', assigneeId:'u8', status:'active', dueDate:'2026-05-22', subtasks:[], deliverables:['d4','d5','d6'] },
+
+  // TechFlow (p1) - on track
+  { id:'t6', partnerId:'p1', phase:3, main:true, name:'Campagne Materialen Voorbereiden', assigneeRole:'Marketing', assigneeId:'u3', status:'active', dueDate:'2026-06-10', subtasks:['t6a','t6b'], deliverables:[] },
+  { id:'t6a', partnerId:'p1', phase:3, main:false, parentId:'t6', name:'Partner pagina ontwerp finaliseren', assigneeRole:'Marketing', assigneeId:'u3', status:'active', dueDate:'2026-06-05' },
+  { id:'t6b', partnerId:'p1', phase:3, main:false, parentId:'t6', name:'Social media assets aanmaken', assigneeRole:'Marketing', assigneeId:'u3', status:'not_active', dueDate:'2026-06-08' },
+  { id:'t7', partnerId:'p1', phase:3, main:true, name:'Sales Enablement Kit', assigneeRole:'Sales', assigneeId:'u4', status:'active', dueDate:'2026-06-12', subtasks:[], deliverables:[] },
+
+  // InnovatieHub (p4) - at risk
+  { id:'t8', partnerId:'p4', phase:1, main:true, name:'Contract Ondertekening', assigneeRole:'BDM', assigneeId:'u1', status:'active', dueDate:'2026-05-20', subtasks:[], deliverables:['d7'], checklist:[] },
+  { id:'t9', partnerId:'p4', phase:1, main:true, name:'Juridische Review (afwijking)', assigneeRole:'BDM', assigneeId:'u1', status:'not_active', dueDate:'2026-05-25', conditional:true, conditionLabel:'Alleen bij contractafwijking', subtasks:[], deliverables:[] },
+
+  // Nordic (p5) - just started
+  { id:'t10', partnerId:'p5', phase:1, main:true, name:'Welkomstpakket Versturen', assigneeRole:'BDM', assigneeId:'u1', status:'completed', dueDate:'2026-05-18', completedAt:'2026-05-17', subtasks:[], deliverables:[] },
+  { id:'t11', partnerId:'p5', phase:1, main:true, name:'Compliance Check', assigneeRole:'BDM', assigneeId:'u10', status:'active', dueDate:'2026-05-26', subtasks:[], deliverables:[] },
+
+  // Generic tasks for task views
+  { id:'t12', partnerId:'p1', phase:2, main:true, name:'Portal Toegang Configureren', assigneeRole:'IT', assigneeId:'u2', status:'completed', dueDate:'2026-05-20', completedAt:'2026-05-19', subtasks:[], deliverables:[] },
+  { id:'t13', partnerId:'p2', phase:1, main:true, name:'Contractvalidatie', assigneeRole:'BDM', assigneeId:'u1', status:'completed', dueDate:'2026-05-10', completedAt:'2026-05-09', subtasks:[], deliverables:[] },
+];
+
+const DELIVERABLES = [
+  { id:'d1', taskId:'t1', name:'API Documentatie & Credentials', type:'file', fulfilled:false, requiredByRole:'IT' },
+  { id:'d2', taskId:'t2', name:'Getekende DPA', type:'file', fulfilled:false, requiredByRole:'IT', uploadedBy:null },
+  { id:'d3', taskId:'t4', name:'Partner Pagina (live)', type:'approval', fulfilled:false, requiredByRole:'Sales' },
+  { id:'d4', taskId:'t5', name:'Bedrijfslogo (SVG/PNG)', type:'file', fulfilled:true, uploadedBy:'u8', uploadedAt:'2026-05-18' },
+  { id:'d5', taskId:'t5', name:'Productfoto\'s (min. 5)', type:'file', fulfilled:false, uploadedBy:null },
+  { id:'d6', taskId:'t5', name:'Bedrijfsbeschrijving (NL+EN)', type:'file', fulfilled:false, uploadedBy:null },
+  { id:'d7', taskId:'t8', name:'Ondertekend Contract', type:'file', fulfilled:false, uploadedBy:null },
+];
+
+const COMMENTS = [
+  { id:'c1', taskId:'t3', authorId:'u1', text:'@Tom Hendriks: Kun je een update geven over de ERP formulieren? De deadline is verlopen.', time:'2026-05-19 09:15', mentions:['u2'] },
+  { id:'c2', taskId:'t3', authorId:'u2', text:'Ik loop vast op de orderformulier-configuratie. Er is een veld mapping issue met hun productcatalogus. Verwacht morgen klaar te zijn.', time:'2026-05-19 11:30', mentions:[] },
+  { id:'c3', taskId:'t5', authorId:'u3', text:'@Jan Willems: We missen nog de productfoto\'s en bedrijfsbeschrijving. Kunt u die deze week aanleveren?', time:'2026-05-18 14:00', mentions:['u8'] },
+  { id:'c4', taskId:'t6', authorId:'u3', text:'Partner pagina ontwerp is bijna klaar. @Sarah van der Berg: kun je even meekijken voor goedkeuring?', time:'2026-05-19 10:45', mentions:['u1'] },
+  { id:'c5', taskId:'t2', authorId:'u1', text:'@Hans Mueller: Could you upload the signed DPA? IT is waiting for it before they can proceed with API setup.', time:'2026-05-17 16:20', mentions:['u7'] },
+];
+
+const NOTIFICATIONS = [
+  { id:'n1', userId:'u1', type:'overdue', icon:'fa-clock', iconBg:'var(--danger-bg)', iconColor:'var(--danger)', title:'Taak verlopen: ERP Formulieren Configuratie', desc:'CloudNet Belgium — 3 dagen verlopen, toegewezen aan Tom Hendriks', time:'2026-05-19 08:00', read:false, taskId:'t3', partnerId:'p3' },
+  { id:'n2', userId:'u1', type:'blocked', icon:'fa-lock', iconBg:'var(--warning-bg)', iconColor:'#b45309', title:'Taak geblokkeerd: API Credentials & Endpoint Setup', desc:'DataBridge GmbH — Wacht op getekende DPA van partner', time:'2026-05-19 08:00', read:false, taskId:'t1', partnerId:'p2' },
+  { id:'n3', userId:'u1', type:'mention', icon:'fa-at', iconBg:'var(--primary-bg)', iconColor:'var(--primary)', title:'Lisa de Vries heeft je getagd', desc:'TechFlow Solutions — "kun je even meekijken voor goedkeuring?"', time:'2026-05-19 10:45', read:false, taskId:'t6', partnerId:'p1' },
+  { id:'n4', userId:'u1', type:'deadline', icon:'fa-calendar', iconBg:'var(--warning-bg)', iconColor:'#b45309', title:'Deadline morgen: Contract Ondertekening', desc:'InnovatieHub BV — Deadline: 20 mei 2026', time:'2026-05-19 08:00', read:true, taskId:'t8', partnerId:'p4' },
+  { id:'n5', userId:'u1', type:'completed', icon:'fa-check-circle', iconBg:'var(--success-bg)', iconColor:'var(--success)', title:'Taak afgerond: Portal Toegang Configureren', desc:'TechFlow Solutions — Afgerond door Tom Hendriks', time:'2026-05-19 07:30', read:true, taskId:'t12', partnerId:'p1' },
+  { id:'n6', userId:'u2', type:'activated', icon:'fa-play', iconBg:'var(--primary-bg)', iconColor:'var(--primary)', title:'Nieuwe taak geactiveerd', desc:'TechFlow Solutions — Portal Toegang Configureren', time:'2026-05-18 09:00', read:true, taskId:'t12', partnerId:'p1' },
+  { id:'n7', userId:'u3', type:'prerequisite', icon:'fa-upload', iconBg:'var(--success-bg)', iconColor:'var(--success)', title:'Asset ontvangen: Bedrijfslogo', desc:'CloudNet Belgium — Geüpload door Jan Willems', time:'2026-05-18 15:00', read:true, taskId:'t5', partnerId:'p3' },
+];
+
+const TEMPLATES = [
+  { id:'tmpl1', name:'Expert-Partner — Partner Portal', intType:'Partner Portal', conType:'Expert-Partner', version:3, active:true, updatedAt:'2026-05-10', phases:[
+    { name:'Contract & Compliance', tasks:['Welkomstpakket','Contractvalidatie','DPA ondertekening','Compliance check'] },
+    { name:'Technische Setup', tasks:['Portal toegang configureren','SSO koppeling','Testomgeving inrichten'] },
+    { name:'Content & Marketing', tasks:['Marketing materialen aanleveren','Partner pagina aanmaken','Campagne materialen','Sales enablement kit'] },
+    { name:'Go-to-Market', tasks:['Lanceringsplan','Training partnerbeheerder','Communicatie naar klanten'] },
+    { name:'Go-Live & Overdracht', tasks:['Go-live check','Overdracht aan accountmanager','Evaluatie gesprek'] }
+  ]},
+  { id:'tmpl2', name:'Software-Partner — API Integration', intType:'API Integration', conType:'Software-Partner', version:2, active:true, updatedAt:'2026-05-05', phases:[
+    { name:'Contract & Compliance', tasks:['Welkomstpakket','Contractvalidatie','DPA ondertekening','Technische NDA'] },
+    { name:'Technische Setup', tasks:['API credentials genereren','Endpoint whitelisting','Connectiviteit testen','Integratie validatie'] },
+    { name:'Content & Marketing', tasks:['Technische documentatie','Partner pagina aanmaken','Joint solution brief'] },
+    { name:'Go-to-Market', tasks:['Lanceringsplan','Demo omgeving','Partner certificering'] },
+    { name:'Go-Live & Overdracht', tasks:['Go-live check','Monitoring opzetten','Evaluatie gesprek'] }
+  ]},
+  { id:'tmpl3', name:'Expert-Partner — Forms ERP', intType:'Forms ERP', conType:'Expert-Partner', version:4, active:true, updatedAt:'2026-04-28', phases:[
+    { name:'Contract & Compliance', tasks:['Welkomstpakket','Contractvalidatie','DPA ondertekening'] },
+    { name:'Technische Setup', tasks:['Productcatalogus importeren','Prijslijst koppelen','Orderformulier aanmaken','Testbestelling','Foutafhandeling valideren','Go/no-go review'] },
+    { name:'Content & Marketing', tasks:['Marketing materialen aanleveren','Partner pagina aanmaken','Campagne materialen'] },
+    { name:'Go-to-Market', tasks:['Lanceringsplan','Training partnermedewerkers','Pilotklant selecteren'] },
+    { name:'Go-Live & Overdracht', tasks:['Go-live check','Overdracht','Evaluatie gesprek'] }
+  ]}
+];
+
+// =====================================================
+// RENDERING ENGINE
+// =====================================================
+
+function getStatusBadge(status) {
+  const map = {
+    blocked: { cls:'badge-red', label:t('blocked'), icon:'fa-lock' },
+    overdue: { cls:'badge-red', label:t('overdue'), icon:'fa-clock' },
+    at_risk: { cls:'badge-orange', label:t('atRisk'), icon:'fa-triangle-exclamation' },
+    on_track: { cls:'badge-green', label:t('onTrack'), icon:'fa-check' },
+    completed: { cls:'badge-green', label:t('completed'), icon:'fa-check-circle' },
+    active: { cls:'badge-blue', label:t('active'), icon:'fa-play' },
+    not_active: { cls:'badge-gray', label:t('notActive'), icon:'fa-minus' },
+  };
+  const m = map[status] || map['active'];
+  return `<span class="badge ${m.cls}"><i class="fa-solid ${m.icon}"></i> ${m.label}</span>`;
+}
+
+function getProgressColor(p) { return p >= 70 ? 'green' : p >= 40 ? 'orange' : p < 20 ? 'red' : 'blue'; }
+
+function getUserById(id) { return USERS.find(u => u.id === id); }
+function getPartnerById(id) { return PARTNERS.find(p => p.id === id); }
+
+function avatar(user, size) {
+  size = size || 32;
+  return `<div style="width:${size}px;height:${size}px;border-radius:50%;background:${user.color};display:flex;align-items:center;justify-content:center;font-weight:600;font-size:${size*0.4}px;color:#fff;flex-shrink:0">${user.initials}</div>`;
+}
+
+function showToast(msg, type) {
+  type = type || 'success';
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.innerHTML = `<i class="fa-solid ${type==='success'?'fa-check-circle':'fa-times-circle'}"></i> ${msg}`;
+  document.getElementById('toastContainer').appendChild(el);
+  setTimeout(() => el.remove(), 3000);
+}
+
+// =====================================================
+// NAVIGATION
+// =====================================================
+
+function renderSidebar() {
+  const isPartnerRole = currentUser.role === 'Partner';
+  const isBDMorAdmin = ['BDM','Admin'].includes(currentUser.role);
+
+  let navItems;
+  if (portalMode || isPartnerRole) {
+    navItems = [
+      { id:'portal', icon:'fa-house', label:t('partnerPortal') },
+    ];
+  } else {
+    navItems = [
+      { id:'dashboard', icon:'fa-gauge-high', label:t('dashboard'), badge: 3 },
+      { id:'partners', icon:'fa-building', label:t('partners') },
+      { id:'tasks', icon:'fa-list-check', label:t('tasks') },
+      { id:'notifications', icon:'fa-bell', label:t('notifications'), badge: NOTIFICATIONS.filter(n=>n.userId===currentUser.id && !n.read).length },
+    ];
+    if (isBDMorAdmin) navItems.push({ id:'templates', icon:'fa-file-lines', label:t('templates') });
+    if (currentUser.role === 'Admin') navItems.push({ id:'admin', icon:'fa-shield-halved', label:t('admin') });
+    navItems.push({ id:'settings', icon:'fa-gear', label:t('settings') });
+    navItems.push({ sep:true });
+    navItems.push({ id:'portal', icon:'fa-external-link', label:t('partnerPortal') });
+  }
+
+  let html = '';
+  navItems.forEach(item => {
+    if (item.sep) { html += '<div style="border-top:1px solid var(--gray-700);margin:8px 0"></div>'; return; }
+    html += `<div class="nav-item ${currentPage===item.id?'active':''}" onclick="navigate('${item.id}')">
+      <i class="fa-solid ${item.icon}"></i> ${item.label}
+      ${item.badge ? `<span class="nav-badge">${item.badge}</span>` : ''}
+    </div>`;
+  });
+  document.getElementById('sidebarNav').innerHTML = html;
+
+  document.getElementById('sidebarUser').innerHTML = `
+    ${avatar(currentUser, 32)}
+    <div class="user-info">
+      <div class="user-name">${currentUser.name}</div>
+      <div class="user-role">${currentUser.role}</div>
+    </div>`;
+}
+
+function renderHeader(title, actions) {
+  actions = actions || '';
+  let roleSwitch = '';
+  if (!portalMode) {
+    roleSwitch = `<div class="lang-toggle" style="margin-right:8px">
+      <button class="lang-btn ${LANG.current==='nl'?'active':''}" onclick="switchLang('nl')">NL</button>
+      <button class="lang-btn ${LANG.current==='en'?'active':''}" onclick="switchLang('en')">EN</button>
+    </div>`;
+  }
+  document.getElementById('headerBar').innerHTML = `
+    <h1 class="header-title">${title}</h1>
+    <div class="header-actions">
+      ${actions}
+      ${roleSwitch}
+      <div class="search-box"><i class="fa-solid fa-search"></i><input placeholder="${t('search')}" /></div>
+    </div>`;
+}
+
+function navigate(page, opts) {
+  opts = opts || {};
+  if (page === 'portal') portalMode = true;
+  else portalMode = false;
+  currentPage = page;
+  selectedPartnerId = opts.partnerId || null;
+  selectedTaskId = opts.taskId || null;
+  renderSidebar();
+  renderPage();
+}
+
+function renderPage() {
+  const area = document.getElementById('contentArea');
+  switch(currentPage) {
+    case 'dashboard': renderDashboard(area); break;
+    case 'partners': selectedPartnerId ? renderPartnerDetail(area) : renderPartnersList(area); break;
+    case 'tasks': selectedTaskId ? renderTaskDetail(area) : renderTasksList(area); break;
+    case 'notifications': renderNotifications(area); break;
+    case 'templates': renderTemplates(area); break;
+    case 'admin': renderAdmin(area); break;
+    case 'settings': renderSettings(area); break;
+    case 'portal': renderPortal(area); break;
+  }
+}
+
+// =====================================================
+// DASHBOARD (FR15, FR16, FR17, FR18, FR19)
+// =====================================================
+
+function renderDashboard(area) {
+  renderHeader(t('dashboard'), `<button class="btn btn-primary" onclick="showNewOnboardingModal()"><i class="fa-solid fa-plus"></i> ${t('newOnboarding')}</button>`);
+
+  const active = PARTNERS.filter(p=>!p.archived);
+  const blocked = active.filter(p=>p.status==='blocked').length;
+  const overdue = active.filter(p=>p.status==='overdue').length;
+  const atRisk = active.filter(p=>p.status==='at_risk').length;
+  const onTrack = active.filter(p=>p.status==='on_track').length;
+
+  const myTasks = TASKS.filter(t => t.assigneeId === currentUser.id && t.status !== 'completed' && t.status !== 'not_active' && t.main);
+  const myNotifs = NOTIFICATIONS.filter(n => n.userId === currentUser.id && !n.read);
+
+  let alertRows = '';
+  const alertPartners = active.filter(p => ['blocked','overdue','at_risk'].includes(p.status))
+    .sort((a,b) => {
+      const order = {overdue:0,blocked:1,at_risk:2};
+      return (order[a.status]||3) - (order[b.status]||3);
+    });
+
+  alertPartners.forEach(p => {
+    const sevClass = p.status==='overdue'||p.status==='blocked' ? 'severity-red' : 'severity-orange';
+    const blockedTask = TASKS.find(t => t.partnerId===p.id && (t.status==='blocked'||t.status==='overdue') && t.main);
+    const owner = blockedTask ? getUserById(blockedTask.assigneeId) : null;
+    let reason = '';
+    if (p.status==='blocked' && blockedTask && blockedTask.blockedBy) {
+      const blocker = TASKS.find(t=>t.id===blockedTask.blockedBy);
+      reason = `${t('blocked_by')}: ${blocker ? blocker.name : 'onbekend'}`;
+    } else if (p.status==='overdue' && blockedTask) {
+      const days = Math.ceil((new Date() - new Date(blockedTask.dueDate)) / 86400000);
+      reason = `${days} ${t('days_overdue')}`;
+    } else if (p.status==='at_risk') {
+      reason = 'Deadline nadert, voortgang vertraagd';
+    }
+
+    alertRows += `<div class="alert-row ${sevClass}" onclick="navigate('partners',{partnerId:'${p.id}'})">
+      <div class="alert-icon"><i class="fa-solid ${p.status==='blocked'?'fa-lock':p.status==='overdue'?'fa-clock':'fa-triangle-exclamation'}" style="color:${p.status==='at_risk'?'var(--warning)':'var(--danger)'}"></i></div>
+      <div class="alert-content">
+        <div class="alert-partner">${p.company}</div>
+        <div class="alert-reason">${reason}${blockedTask ? ' — '+blockedTask.name : ''}</div>
+      </div>
+      <div class="alert-meta">
+        ${owner ? `<div class="alert-owner">${owner.name}</div>` : ''}
+        ${getStatusBadge(p.status)}
+      </div>
+    </div>`;
+  });
+
+  let todayHtml = '';
+  myTasks.forEach(task => {
+    const partner = getPartnerById(task.partnerId);
+    todayHtml += `<div class="notif-item" onclick="navigate('tasks',{taskId:'${task.id}'})">
+      <div class="notif-icon" style="background:${task.status==='overdue'?'var(--danger-bg)':task.status==='blocked'?'var(--warning-bg)':'var(--primary-bg)'}">
+        <i class="fa-solid fa-list-check" style="color:${task.status==='overdue'?'var(--danger)':task.status==='blocked'?'#b45309':'var(--primary)'}"></i>
+      </div>
+      <div class="notif-content">
+        <div class="notif-title">${task.name}</div>
+        <div class="notif-desc">${partner.company} — ${t('deadline')}: ${task.dueDate}</div>
+      </div>
+      <div>${getStatusBadge(task.status)}</div>
+    </div>`;
+  });
+
+  area.innerHTML = `
+    <div class="stats-grid">
+      <div class="stat-card red"><div class="stat-value">${blocked+overdue}</div><div class="stat-label">${t('blocked')} / ${t('overdue')}</div></div>
+      <div class="stat-card orange"><div class="stat-value">${atRisk}</div><div class="stat-label">${t('atRisk')}</div></div>
+      <div class="stat-card green"><div class="stat-value">${onTrack}</div><div class="stat-label">${t('onTrack')}</div></div>
+      <div class="stat-card blue"><div class="stat-value">${active.length}</div><div class="stat-label">${t('allPartners')} (actief)</div></div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header"><h3><i class="fa-solid fa-triangle-exclamation" style="color:var(--danger);margin-right:6px"></i> ${t('alertsTitle')}</h3></div>
+        <div class="card-body">${alertRows || `<div style="text-align:center;padding:20px;color:var(--gray-400)"><i class="fa-solid fa-check-circle" style="font-size:32px;display:block;margin-bottom:8px;color:var(--success)"></i>${t('noAlerts')}</div>`}</div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3><i class="fa-solid fa-calendar-day" style="color:var(--primary);margin-right:6px"></i> ${t('todayTasks')}</h3></div>
+        <div class="card-body" style="padding:0">${todayHtml || '<div style="padding:20px;text-align:center;color:var(--gray-400)">Geen taken voor vandaag</div>'}</div>
+      </div>
+    </div>`;
+}
+
+// =====================================================
+// PARTNERS LIST (FR6)
+// =====================================================
+
+function renderPartnersList(area) {
+  renderHeader(t('partners'), `<button class="btn btn-primary" onclick="showNewOnboardingModal()"><i class="fa-solid fa-plus"></i> ${t('newOnboarding')}</button>`);
+
+  const active = PARTNERS.filter(p=>!p.archived);
+  const archived = PARTNERS.filter(p=>p.archived);
+
+  let rows = '';
+  active.forEach(p => {
+    rows += `<tr class="clickable" onclick="navigate('partners',{partnerId:'${p.id}'})">
+      <td><strong>${p.company}</strong><br><span style="font-size:12px;color:var(--gray-500)">${p.contact}</span></td>
+      <td>${p.country}</td>
+      <td>${p.intType}</td>
+      <td>${p.conType}</td>
+      <td>${t('phase')} ${p.phase} / 5<br><div class="progress-bar" style="width:100px;margin-top:4px"><div class="progress-fill ${getProgressColor(p.progress)}" style="width:${p.progress}%"></div></div></td>
+      <td>${p.goLive}</td>
+      <td>${getStatusBadge(p.status)}</td>
+    </tr>`;
+  });
+
+  let archivedRows = '';
+  archived.forEach(p => {
+    archivedRows += `<tr class="clickable" onclick="navigate('partners',{partnerId:'${p.id}'})">
+      <td><strong>${p.company}</strong></td>
+      <td>${p.country}</td>
+      <td>${p.intType}</td>
+      <td>${p.conType}</td>
+      <td>${getStatusBadge('completed')}</td>
+      <td>${p.goLive}</td>
+      <td>${getStatusBadge('completed')}</td>
+    </tr>`;
+  });
+
+  area.innerHTML = `
+    <div class="card" style="margin-bottom:24px">
+      <div class="card-header"><h3>${t('allPartners')} (${active.length} actief)</h3></div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>${t('companyName')}</th><th>${t('country')}</th><th>${t('integrationType')}</th><th>${t('contractType')}</th><th>${t('progress')}</th><th>${t('goLiveDate')}</th><th>${t('status')}</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h3><i class="fa-solid fa-box-archive" style="margin-right:6px;color:var(--gray-400)"></i> ${t('archivedOnboardings')} (${archived.length})</h3></div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>${t('companyName')}</th><th>${t('country')}</th><th>${t('integrationType')}</th><th>${t('contractType')}</th><th>${t('status')}</th><th>${t('goLiveDate')}</th><th></th></tr></thead>
+        <tbody>${archivedRows}</tbody>
+      </table></div>
+    </div>`;
+}
+
+// =====================================================
+// PARTNER DETAIL (FR1-FR6, FR7-FR14, FR17, FR36-FR38)
+// =====================================================
+
+function renderPartnerDetail(area) {
+  const p = getPartnerById(selectedPartnerId);
+  if (!p) return renderPartnersList(area);
+
+  renderHeader(`${p.company}`, `
+    <button class="btn btn-secondary" onclick="navigate('partners')"><i class="fa-solid fa-arrow-left"></i> ${t('allPartners')}</button>
+    <button class="btn btn-primary" onclick="showInvitePartnerModal('${p.id}')"><i class="fa-solid fa-paper-plane"></i> ${t('invitePartner')}</button>
+  `);
+
+  const phases = PHASE_NAMES();
+  let phaseHtml = '';
+  phases.forEach((name, i) => {
+    const idx = i + 1;
+    let cls = idx < p.phase ? 'completed' : idx === p.phase ? 'active' : '';
+    if (p.status === 'blocked' && idx === p.phase) cls = 'blocked';
+    phaseHtml += `<div class="phase-step ${cls}">
+      <div class="step-dot">${idx}</div>
+      <div class="step-label">${name}</div>
+    </div>`;
+  });
+
+  const partnerTasks = TASKS.filter(tk => tk.partnerId === p.id && tk.main);
+  let taskHtml = '';
+  partnerTasks.forEach(task => {
+    const assignee = getUserById(task.assigneeId);
+    const subtasks = TASKS.filter(st => st.parentId === task.id);
+    const isBlurred = currentUser.role === 'Marketing' && task.assigneeRole !== 'Marketing';
+
+    let subtaskHtml = '';
+    subtasks.forEach(st => {
+      const stDone = st.status === 'completed';
+      subtaskHtml += `<div class="subtask ${stDone?'done':''} ${st.status==='blocked'?'blocked':''}" onclick="navigate('tasks',{taskId:'${st.id}'})">
+        <input type="checkbox" ${stDone?'checked':''} onclick="event.stopPropagation();completeSubtask('${st.id}')" ${st.status==='blocked'||st.status==='not_active'?'disabled':''}>
+        <span class="subtask-name">${st.name}</span>
+        <span class="subtask-due">${st.dueDate}</span>
+        ${getStatusBadge(st.status)}
+      </div>`;
+    });
+
+    const taskDels = DELIVERABLES.filter(d => d.taskId === task.id);
+    let delHtml = '';
+    taskDels.forEach(d => {
+      delHtml += `<div class="deliverable ${d.fulfilled?'fulfilled':'missing'}">
+        <i class="fa-solid ${d.fulfilled?'fa-circle-check':'fa-circle-exclamation'}"></i>
+        <span class="del-name">${d.name}</span>
+        <span class="del-status badge ${d.fulfilled?'badge-green':'badge-orange'}">${d.fulfilled?t('prerequisitesMet'):t('prerequisitesMissing')}</span>
+      </div>`;
+    });
+
+    taskHtml += `<div class="task-group ${isBlurred?'task-blurred':''}">
+      <div class="task-group-header open" onclick="this.classList.toggle('open');this.nextElementSibling.style.display=this.classList.contains('open')?'block':'none'">
+        <i class="fa-solid fa-caret-right caret" style="transform:rotate(90deg)"></i>
+        <span style="flex:1">${task.name}</span>
+        ${task.conditional ? `<span class="badge badge-blue"><i class="fa-solid fa-code-branch"></i> ${t('conditional')}</span>` : ''}
+        <span style="font-size:12px;color:var(--gray-500);margin-right:8px">${assignee ? assignee.name : task.assigneeRole}</span>
+        ${getStatusBadge(task.status)}
+      </div>
+      <div class="subtask-list" style="display:block">
+        ${subtaskHtml}
+        ${delHtml}
+        ${subtasks.length === 0 && taskDels.length === 0 ? `<div style="padding:8px;color:var(--gray-400);font-size:12px">
+          <button class="btn btn-sm btn-secondary" onclick="navigate('tasks',{taskId:'${task.id}'})"><i class="fa-solid fa-eye"></i> ${t('taskDetail')}</button>
+        </div>` : `<div style="padding:4px 0"><button class="btn btn-sm btn-secondary" onclick="navigate('tasks',{taskId:'${task.id}'})"><i class="fa-solid fa-eye"></i> ${t('taskDetail')}</button></div>`}
+      </div>
+    </div>`;
+  });
+
+  area.innerHTML = `
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-body">
+        <div style="display:flex;align-items:center;gap:20px;margin-bottom:16px">
+          <div>
+            <div style="font-size:11px;color:var(--gray-500)">${t('integrationType')}</div>
+            <div style="font-weight:600">${p.intType}</div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--gray-500)">${t('contractType')}</div>
+            <div style="font-weight:600">${p.conType}</div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--gray-500)">${t('goLiveDate')}</div>
+            <div style="font-weight:600">${p.goLive}</div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--gray-500)">${t('contactPerson')}</div>
+            <div style="font-weight:600">${p.contact} (${p.email})</div>
+          </div>
+          <div style="margin-left:auto">
+            ${getStatusBadge(p.status)}
+          </div>
+        </div>
+        <div class="phase-stepper">${phaseHtml}</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="progress-bar" style="flex:1"><div class="progress-fill ${getProgressColor(p.progress)}" style="width:${p.progress}%"></div></div>
+          <span style="font-size:13px;font-weight:600">${p.progress}%</span>
+        </div>
+        <div style="margin-top:8px;font-size:12px;color:var(--gray-500)"><i class="fa-solid fa-info-circle"></i> ${t('backward_planning')}</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h3>${t('tasks')}</h3></div>
+      <div class="card-body">${taskHtml}</div>
+    </div>`;
+}
+
+// =====================================================
+// TASKS LIST (FR7-FR14, FR18)
+// =====================================================
+
+function renderTasksList(area) {
+  renderHeader(t('tasks'));
+
+  const myTasks = TASKS.filter(tk => tk.assigneeId === currentUser.id && tk.main);
+  const allMain = TASKS.filter(tk => tk.main);
+
+  let myRows = '';
+  myTasks.forEach(task => {
+    const partner = getPartnerById(task.partnerId);
+    myRows += `<tr class="clickable" onclick="navigate('tasks',{taskId:'${task.id}'})">
+      <td><strong>${task.name}</strong>${task.conditional?` <span class="badge badge-blue" style="font-size:10px">${t('conditional')}</span>`:''}</td>
+      <td>${partner ? partner.company : '-'}</td>
+      <td>${t('phase')} ${task.phase}</td>
+      <td>${task.dueDate}</td>
+      <td>${getStatusBadge(task.status)}</td>
+    </tr>`;
+  });
+
+  let allRows = '';
+  allMain.forEach(task => {
+    const partner = getPartnerById(task.partnerId);
+    const assignee = getUserById(task.assigneeId);
+    allRows += `<tr class="clickable" onclick="navigate('tasks',{taskId:'${task.id}'})">
+      <td><strong>${task.name}</strong></td>
+      <td>${partner ? partner.company : '-'}</td>
+      <td>${assignee ? assignee.name : task.assigneeRole}</td>
+      <td>${t('phase')} ${task.phase}</td>
+      <td>${task.dueDate}</td>
+      <td>${getStatusBadge(task.status)}</td>
+    </tr>`;
+  });
+
+  area.innerHTML = `
+    <div class="tabs" id="taskTabs">
+      <div class="tab active" onclick="switchTaskTab('my',this)">${t('myTasks')} (${myTasks.length})</div>
+      <div class="tab" onclick="switchTaskTab('all',this)">${t('allTasks')} (${allMain.length})</div>
+    </div>
+    <div id="taskTabContent">
+      <div class="card"><div class="table-wrap"><table>
+        <thead><tr><th>${t('tasks')}</th><th>Partner</th><th>${t('phase')}</th><th>${t('deadline')}</th><th>${t('status')}</th></tr></thead>
+        <tbody>${myRows}</tbody>
+      </table></div></div>
+    </div>
+    <div id="taskTabAll" style="display:none">
+      <div class="card"><div class="table-wrap"><table>
+        <thead><tr><th>${t('tasks')}</th><th>Partner</th><th>${t('assignee')}</th><th>${t('phase')}</th><th>${t('deadline')}</th><th>${t('status')}</th></tr></thead>
+        <tbody>${allRows}</tbody>
+      </table></div></div>
+    </div>`;
+}
+
+function switchTaskTab(tab, el) {
+  document.querySelectorAll('#taskTabs .tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('taskTabContent').style.display = tab === 'my' ? 'block' : 'none';
+  document.getElementById('taskTabAll').style.display = tab === 'all' ? 'block' : 'none';
+}
+
+// =====================================================
+// TASK DETAIL (FR7-FR14, FR36-FR42)
+// =====================================================
+
+function renderTaskDetail(area) {
+  const task = TASKS.find(tk => tk.id === selectedTaskId);
+  if (!task) return renderTasksList(area);
+  const partner = getPartnerById(task.partnerId);
+  const assignee = getUserById(task.assigneeId);
+
+  renderHeader(t('taskDetail'), `<button class="btn btn-secondary" onclick="navigate('tasks')"><i class="fa-solid fa-arrow-left"></i> ${t('tasks')}</button>`);
+
+  const subtasks = TASKS.filter(st => st.parentId === task.id);
+  let checklistHtml = '';
+  if (subtasks.length) {
+    subtasks.forEach(st => {
+      const done = st.status === 'completed';
+      checklistHtml += `<li class="checklist-item ${done?'done':''}">
+        <input type="checkbox" ${done?'checked':''} onclick="completeSubtask('${st.id}')" ${st.status==='blocked'||st.status==='not_active'?'disabled':''}>
+        <label>${st.name}</label>
+        <span class="meta">${st.dueDate}</span>
+        ${getStatusBadge(st.status)}
+      </li>`;
+    });
+  }
+
+  const taskDels = DELIVERABLES.filter(d => d.taskId === task.id);
+  let delHtml = '';
+  taskDels.forEach(d => {
+    const uploader = d.uploadedBy ? getUserById(d.uploadedBy) : null;
+    delHtml += `<div class="deliverable ${d.fulfilled?'fulfilled':'missing'}">
+      <i class="fa-solid ${d.fulfilled?'fa-circle-check':'fa-circle-exclamation'}"></i>
+      <span class="del-name">${d.name}</span>
+      ${d.fulfilled && uploader ? `<span style="font-size:12px;color:var(--gray-500)">Geüpload door ${uploader.name} — ${d.uploadedAt}</span>` : ''}
+      <span class="del-status badge ${d.fulfilled?'badge-green':'badge-orange'}">${d.fulfilled?t('prerequisitesMet'):t('prerequisitesMissing')}</span>
+      ${!d.fulfilled ? `<button class="btn btn-sm btn-primary" onclick="simulateUpload('${d.id}')"><i class="fa-solid fa-upload"></i></button>` : ''}
+    </div>`;
+  });
+
+  const taskComments = COMMENTS.filter(c => c.taskId === task.id);
+  let commentsHtml = '';
+  taskComments.forEach(c => {
+    const author = getUserById(c.authorId);
+    let text = c.text.replace(/@(\w+ \w+)/g, '<span class="mention">@$1</span>');
+    commentsHtml += `<div class="comment">
+      ${avatar(author, 32)}
+      <div class="comment-body">
+        <span class="comment-author">${author.name}</span><span class="comment-time">${c.time}</span>
+        <div class="comment-text">${text}</div>
+      </div>
+    </div>`;
+  });
+
+  let blockerHtml = '';
+  if (task.blockedBy) {
+    const blocker = TASKS.find(t => t.id === task.blockedBy);
+    if (blocker) {
+      const bAssignee = getUserById(blocker.assigneeId);
+      blockerHtml = `<div style="background:var(--danger-bg);border:1px solid #fecaca;border-radius:8px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px">
+        <i class="fa-solid fa-lock" style="color:var(--danger);font-size:18px"></i>
+        <div>
+          <div style="font-weight:600;font-size:13px">${t('blocked_by')}: ${blocker.name}</div>
+          <div style="font-size:12px;color:var(--gray-600)">${t('assignee')}: ${bAssignee ? bAssignee.name : blocker.assigneeRole} — ${t('deadline')}: ${blocker.dueDate}</div>
+        </div>
+        <button class="btn btn-sm btn-secondary" onclick="navigate('tasks',{taskId:'${blocker.id}'})" style="margin-left:auto">Bekijk blocker</button>
+      </div>`;
+    }
+  }
+
+  area.innerHTML = `
+    ${blockerHtml}
+    <div class="grid-2">
+      <div>
+        <div class="card" style="margin-bottom:20px">
+          <div class="card-header">
+            <h3>${task.name}</h3>
+            ${task.conditional ? `<span class="badge badge-blue"><i class="fa-solid fa-code-branch"></i> ${t('conditional')}: ${task.conditionLabel||''}</span>` : ''}
+          </div>
+          <div class="card-body">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+              <div><span style="font-size:12px;color:var(--gray-500)">Partner</span><div style="font-weight:500">${partner ? partner.company : '-'}</div></div>
+              <div><span style="font-size:12px;color:var(--gray-500)">${t('assignee')}</span><div style="font-weight:500">${assignee ? assignee.name+' ('+assignee.role+')' : task.assigneeRole}</div></div>
+              <div><span style="font-size:12px;color:var(--gray-500)">${t('deadline')}</span><div style="font-weight:500">${task.dueDate} <button class="btn btn-sm btn-secondary" onclick="showDeadlineModal('${task.id}')" style="margin-left:4px"><i class="fa-solid fa-pencil"></i></button></div></div>
+              <div><span style="font-size:12px;color:var(--gray-500)">${t('status')}</span><div>${getStatusBadge(task.status)}</div></div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="btn btn-success btn-sm" onclick="completeTask('${task.id}')"><i class="fa-solid fa-check"></i> ${t('markComplete')}</button>
+              <button class="btn btn-secondary btn-sm" onclick="showReassignModal('${task.id}')"><i class="fa-solid fa-user-pen"></i> ${t('reassign')}</button>
+            </div>
+          </div>
+        </div>
+
+        ${subtasks.length ? `<div class="card" style="margin-bottom:20px">
+          <div class="card-header"><h3><i class="fa-solid fa-list-check" style="margin-right:6px"></i> ${t('checklist')}</h3></div>
+          <div class="card-body"><ul class="checklist">${checklistHtml}</ul></div>
+        </div>` : ''}
+
+        ${taskDels.length ? `<div class="card" style="margin-bottom:20px">
+          <div class="card-header"><h3><i class="fa-solid fa-paperclip" style="margin-right:6px"></i> ${t('deliverables')}</h3></div>
+          <div class="card-body">
+            ${delHtml}
+            <div class="upload-area" onclick="simulateUploadGeneric('${task.id}')" style="margin-top:12px">
+              <i class="fa-solid fa-cloud-arrow-up"></i>
+              <div>${t('uploadHere')}</div>
+            </div>
+          </div>
+        </div>` : `<div class="card" style="margin-bottom:20px">
+          <div class="card-header"><h3><i class="fa-solid fa-paperclip" style="margin-right:6px"></i> ${t('uploadFiles')}</h3></div>
+          <div class="card-body">
+            <div class="upload-area" onclick="simulateUploadGeneric('${task.id}')">
+              <i class="fa-solid fa-cloud-arrow-up"></i>
+              <div>${t('uploadHere')}</div>
+            </div>
+          </div>
+        </div>`}
+      </div>
+
+      <div>
+        <div class="card">
+          <div class="card-header">
+            <h3><i class="fa-solid fa-comments" style="margin-right:6px"></i> ${t('comments')} (${taskComments.length})</h3>
+          </div>
+          <div class="card-body">
+            ${commentsHtml || '<div style="color:var(--gray-400);font-size:13px">Nog geen reacties</div>'}
+            <div style="margin-top:16px;border-top:1px solid var(--gray-200);padding-top:16px">
+              <textarea class="form-input" id="newComment" rows="3" placeholder="${t('addComment')}... Gebruik @naam om iemand te taggen"></textarea>
+              <div style="margin-top:8px;display:flex;justify-content:flex-end">
+                <button class="btn btn-primary btn-sm" onclick="addComment('${task.id}')"><i class="fa-solid fa-paper-plane"></i> ${t('addComment')}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+// =====================================================
+// NOTIFICATIONS (FR18, FR19, FR41)
+// =====================================================
+
+function renderNotifications(area) {
+  renderHeader(t('notifications'));
+
+  const myNotifs = NOTIFICATIONS.filter(n => n.userId === currentUser.id);
+  const unread = myNotifs.filter(n => !n.read);
+  const read = myNotifs.filter(n => n.read);
+
+  let html = '';
+  [...unread, ...read].forEach(n => {
+    html += `<div class="notif-item ${n.read?'':'unread'}" onclick="readNotification('${n.id}')">
+      <div class="notif-icon" style="background:${n.iconBg}"><i class="fa-solid ${n.icon}" style="color:${n.iconColor}"></i></div>
+      <div class="notif-content">
+        <div class="notif-title">${n.title}</div>
+        <div class="notif-desc">${n.desc}</div>
+      </div>
+      <div class="notif-time">${n.time}</div>
+    </div>`;
+  });
+
+  area.innerHTML = `
+    <div style="margin-bottom:16px;display:flex;align-items:center;justify-content:space-between">
+      <div style="font-size:13px;color:var(--gray-500)">${unread.length} ongelezen meldingen</div>
+      <button class="btn btn-sm btn-secondary" onclick="markAllRead()"><i class="fa-solid fa-check-double"></i> Alles gelezen</button>
+    </div>
+    <div class="card">
+      <div class="card-body" style="padding:0">${html || '<div style="padding:20px;text-align:center;color:var(--gray-400)">Geen meldingen</div>'}</div>
+    </div>
+    <div style="margin-top:16px;padding:12px 16px;background:var(--primary-bg);border:1px solid #bfdbfe;border-radius:8px;font-size:12px;color:var(--primary)">
+      <i class="fa-solid fa-envelope" style="margin-right:6px"></i> ${t('emailNotif')}
+    </div>`;
+}
+
+// =====================================================
+// TEMPLATES (FR27, FR28, FR29, FR30)
+// =====================================================
+
+function renderTemplates(area) {
+  renderHeader(t('templates'), `<button class="btn btn-primary" onclick="showToast('Template editor geopend','success')"><i class="fa-solid fa-plus"></i> ${t('createTemplate')}</button>`);
+
+  let tmplRows = '';
+  TEMPLATES.forEach(tmpl => {
+    let phasesHtml = '';
+    tmpl.phases.forEach((phase, i) => {
+      phasesHtml += `<div class="template-phase">
+        <div class="template-phase-header" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
+          <span>${t('phase')} ${i+1}: ${phase.name}</span>
+          <span class="badge badge-gray">${phase.tasks.length} taken</span>
+        </div>
+        <div class="template-tasks" style="display:none">
+          ${phase.tasks.map(task => `<div class="template-task"><i class="fa-solid fa-grip-vertical" style="color:var(--gray-300)"></i> ${task}</div>`).join('')}
+        </div>
+      </div>`;
+    });
+
+    tmplRows += `<div class="card" style="margin-bottom:16px">
+      <div class="card-header">
+        <h3>${tmpl.name}</h3>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="badge badge-blue">v${tmpl.version}</span>
+          <span class="badge badge-green">${tmpl.active ? 'Actief' : 'Inactief'}</span>
+          <button class="btn btn-sm btn-secondary" onclick="showToast('Template editor geopend','success')"><i class="fa-solid fa-pencil"></i> ${t('edit')}</button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div style="display:flex;gap:20px;margin-bottom:12px;font-size:12px;color:var(--gray-500)">
+          <span><strong>${t('integrationType')}:</strong> ${tmpl.intType}</span>
+          <span><strong>${t('contractType')}:</strong> ${tmpl.conType}</span>
+          <span><strong>Laatst bijgewerkt:</strong> ${tmpl.updatedAt}</span>
+        </div>
+        ${phasesHtml}
+        <div style="margin-top:12px;padding:8px 12px;background:var(--warning-bg);border-radius:6px;font-size:12px;color:#92400e">
+          <i class="fa-solid fa-info-circle"></i> ${t('futureOnly')}
+        </div>
+      </div>
+    </div>`;
+  });
+
+  area.innerHTML = tmplRows;
+}
+
+// =====================================================
+// ADMIN (FR31, FR32, FR33, FR34, FR35)
+// =====================================================
+
+function renderAdmin(area) {
+  renderHeader(t('admin'), `<button class="btn btn-primary" onclick="showAddUserModal()"><i class="fa-solid fa-plus"></i> ${t('addUser')}</button>`);
+
+  let rows = '';
+  USERS.forEach(u => {
+    rows += `<tr>
+      <td><div style="display:flex;align-items:center;gap:10px">${avatar(u, 28)}<div><strong>${u.name}</strong><br><span style="font-size:12px;color:var(--gray-500)">${u.email}</span></div></div></td>
+      <td><span class="badge ${u.role==='Admin'?'badge-red':u.role==='BDM'?'badge-blue':u.role==='Partner'?'badge-green':'badge-gray'}">${u.role}</span></td>
+      <td>${u.locale?.toUpperCase() || 'NL'}</td>
+      <td>${u.active ? '<span class="badge badge-green">Actief</span>' : '<span class="badge badge-gray">Inactief</span>'}</td>
+      <td>${u.partnerId ? getPartnerById(u.partnerId)?.company || '-' : '-'}</td>
+      <td>
+        <button class="btn btn-sm btn-secondary" onclick="showToast('Gebruiker bewerken geopend','success')"><i class="fa-solid fa-pencil"></i></button>
+        ${u.active ? `<button class="btn btn-sm btn-danger" onclick="toggleUserActive('${u.id}')">${t('deactivate')}</button>` : `<button class="btn btn-sm btn-success" onclick="toggleUserActive('${u.id}')">${t('activate')}</button>`}
+      </td>
+    </tr>`;
+  });
+
+  area.innerHTML = `
+    <div class="card" style="margin-bottom:24px">
+      <div class="card-header"><h3>${t('userManagement')}</h3></div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Gebruiker</th><th>${t('role')}</th><th>${t('language')}</th><th>${t('status')}</th><th>Partner</th><th>${t('actions')}</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h3>${t('roleAssignment')} — RBAC Matrix</h3></div>
+      <div class="card-body">
+        <table>
+          <thead><tr><th>${t('role')}</th><th>Partner zichtbaarheid</th><th>Taak zichtbaarheid</th><th>Systeem toegang</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Admin</strong></td><td>Alle partners</td><td>Alle taken</td><td>Volledig</td></tr>
+            <tr><td><strong>BDM</strong></td><td>Alle partners</td><td>Alle taken</td><td>Templates, aanmaken, dashboard</td></tr>
+            <tr><td><strong>IT</strong></td><td>Alle partners (taak context)</td><td>Eigen taken + vereisten</td><td>Taak uitvoering</td></tr>
+            <tr><td><strong>Marketing</strong></td><td>Alle partners</td><td>Eigen taken prominent; overige vervaagd</td><td>Taak uitvoering</td></tr>
+            <tr><td><strong>Sales</strong></td><td>Alle partners (taak context)</td><td>Eigen taken + vereisten</td><td>Taak uitvoering</td></tr>
+            <tr><td><strong>Partner</strong></td><td>Alleen eigen bedrijf</td><td>Hoog-niveau fasevoortgang; eigen actiepunten</td><td>Partner portaal</td></tr>
+            <tr style="opacity:0.6"><td><strong>Business Developer</strong> <span class="badge badge-gray">toekomst</span></td><td>Eigen portfolio</td><td>Taken eigen partners</td><td>Beperkt dashboard</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+// =====================================================
+// SETTINGS (FR42)
+// =====================================================
+
+function renderSettings(area) {
+  renderHeader(t('settings'));
+
+  area.innerHTML = `
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header"><h3><i class="fa-solid fa-user" style="margin-right:6px"></i> Profiel</h3></div>
+        <div class="card-body">
+          <div class="form-group">
+            <label class="form-label">Naam</label>
+            <input class="form-input" value="${currentUser.name}" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">E-mail</label>
+            <input class="form-input" value="${currentUser.email || 'sarah@spoq.nl'}" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">${t('role')}</label>
+            <input class="form-input" value="${currentUser.role}" disabled />
+          </div>
+          <button class="btn btn-primary" onclick="showToast('Profiel opgeslagen','success')"><i class="fa-solid fa-save"></i> ${t('save')}</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3><i class="fa-solid fa-globe" style="margin-right:6px"></i> ${t('switchLang')}</h3></div>
+        <div class="card-body">
+          <div class="form-group">
+            <label class="form-label">${t('language')}</label>
+            <select class="form-select" onchange="switchLang(this.value)">
+              <option value="nl" ${LANG.current==='nl'?'selected':''}>Nederlands</option>
+              <option value="en" ${LANG.current==='en'?'selected':''}>English</option>
+            </select>
+          </div>
+          <p style="font-size:12px;color:var(--gray-500);margin-top:8px">De taal wordt direct toegepast op alle schermen en meldingen.</p>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:20px">
+      <div class="card-header"><h3><i class="fa-solid fa-user-tag" style="margin-right:6px"></i> ${t('viewAs')} (demo)</h3></div>
+      <div class="card-body">
+        <p style="font-size:12px;color:var(--gray-500);margin-bottom:12px">Wissel van rol om te zien hoe de app eruitziet voor verschillende gebruikers.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          ${USERS.filter(u=>u.active).map(u => `<button class="btn ${u.id===currentUser.id?'btn-primary':'btn-secondary'}" onclick="switchUser('${u.id}')">${avatar(u,20)} ${u.name} <span class="badge badge-gray">${u.role}</span></button>`).join('')}
+        </div>
+      </div>
+    </div>`;
+}
+
+// =====================================================
+// PARTNER PORTAL (FR20-FR26)
+// =====================================================
+
+function renderPortal(area) {
+  renderHeader(t('partnerPortal'), `<button class="btn btn-secondary" onclick="portalMode=false;navigate('dashboard')"><i class="fa-solid fa-arrow-left"></i> Terug naar interne app</button>`);
+
+  const portalPartner = currentUser.partnerId ? getPartnerById(currentUser.partnerId) : PARTNERS.find(p=>p.id==='p1');
+  if (!portalPartner) { area.innerHTML = '<p>Geen partner gekoppeld</p>'; return; }
+
+  const phases = PHASE_NAMES();
+  let phaseHtml = '';
+  phases.forEach((name, i) => {
+    const idx = i + 1;
+    let cls = idx < portalPartner.phase ? 'completed' : idx === portalPartner.phase ? 'active' : '';
+    phaseHtml += `<div class="phase-step ${cls}">
+      <div class="step-dot">${idx}</div>
+      <div class="step-label">${name}</div>
+    </div>`;
+  });
+
+  const partnerTasks = TASKS.filter(tk => tk.partnerId === portalPartner.id && tk.assigneeRole === 'Partner' && tk.main);
+  let actionHtml = '';
+  partnerTasks.forEach(task => {
+    const taskDels = DELIVERABLES.filter(d => d.taskId === task.id);
+    let delHtml = '';
+    taskDels.forEach(d => {
+      delHtml += `<div class="deliverable ${d.fulfilled?'fulfilled':'missing'}" style="margin-top:8px">
+        <i class="fa-solid ${d.fulfilled?'fa-circle-check':'fa-circle-exclamation'}"></i>
+        <span class="del-name">${d.name}</span>
+        ${!d.fulfilled ? `<button class="btn btn-sm btn-primary" onclick="simulateUpload('${d.id}')"><i class="fa-solid fa-upload"></i> Upload</button>` : '<span class="badge badge-green">Geüpload</span>'}
+      </div>`;
+    });
+
+    actionHtml += `<div style="padding:16px;border:1px solid var(--gray-200);border-radius:8px;margin-bottom:12px">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div><strong>${task.name}</strong></div>
+        ${getStatusBadge(task.status)}
+      </div>
+      <div style="font-size:12px;color:var(--gray-500);margin-top:4px">${t('deadline')}: ${task.dueDate}</div>
+      ${delHtml}
+    </div>`;
+  });
+
+  const partnerComments = COMMENTS.filter(c => {
+    const partnerUsers = USERS.filter(u=>u.partnerId===portalPartner.id).map(u=>u.id);
+    return c.mentions.some(m => partnerUsers.includes(m)) || partnerUsers.includes(c.authorId);
+  });
+
+  let commentHtml = '';
+  partnerComments.forEach(c => {
+    const author = getUserById(c.authorId);
+    const isInternal = !author.partnerId;
+    if (isInternal) {
+      let text = c.text.replace(/@(\w+ \w+)/g, '<span class="mention">@$1</span>');
+      text = text.replace(/Kun je een update.*verlopen\./g, '[intern bericht - niet zichtbaar]');
+      commentHtml += `<div class="comment">
+        ${avatar(author, 32)}
+        <div class="comment-body">
+          <span class="comment-author">${author.name} (SPOQ)</span><span class="comment-time">${c.time}</span>
+          <div class="comment-text">${text}</div>
+        </div>
+      </div>`;
+    }
+  });
+
+  area.innerHTML = `
+    <div class="portal-header">
+      <h1>${t('welcomePortal')}</h1>
+      <p>${portalPartner.company} — ${t('portalDesc')}</p>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="card" style="margin-bottom:20px">
+          <div class="card-header"><h3><i class="fa-solid fa-chart-line" style="margin-right:6px"></i> ${t('yourProgress')}</h3></div>
+          <div class="card-body">
+            <div class="phase-stepper">${phaseHtml}</div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:16px">
+              <div class="progress-bar" style="flex:1"><div class="progress-fill ${getProgressColor(portalPartner.progress)}" style="width:${portalPartner.progress}%"></div></div>
+              <span style="font-size:13px;font-weight:600">${portalPartner.progress}%</span>
+            </div>
+            <div style="margin-top:12px;font-size:12px;color:var(--gray-500)">
+              <i class="fa-solid fa-calendar"></i> ${t('goLiveDate')}: <strong>${portalPartner.goLive}</strong>
+            </div>
+          </div>
+        </div>
+
+        ${commentHtml ? `<div class="card">
+          <div class="card-header"><h3><i class="fa-solid fa-comments" style="margin-right:6px"></i> Berichten</h3></div>
+          <div class="card-body">
+            ${commentHtml}
+            <div style="margin-top:12px">
+              <textarea class="form-input" rows="2" placeholder="Reageer..."></textarea>
+              <button class="btn btn-primary btn-sm" style="margin-top:8px" onclick="showToast('Reactie geplaatst','success')"><i class="fa-solid fa-paper-plane"></i> Verstuur</button>
+            </div>
+          </div>
+        </div>` : ''}
+      </div>
+
+      <div>
+        <div class="card">
+          <div class="card-header"><h3><i class="fa-solid fa-clipboard-list" style="margin-right:6px"></i> ${t('yourActions')}</h3></div>
+          <div class="card-body">
+            ${actionHtml || '<div style="text-align:center;color:var(--gray-400);padding:20px"><i class="fa-solid fa-check-circle" style="font-size:32px;display:block;margin-bottom:8px;color:var(--success)"></i>Geen openstaande actiepunten</div>'}
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+// =====================================================
+// MODALS
+// =====================================================
+
+function showModal(title, bodyHtml, footerHtml) {
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
+  overlay.innerHTML = `<div class="modal">
+    <div class="modal-header"><h2>${title}</h2><button class="modal-close" onclick="this.closest('.modal-overlay').remove()">&times;</button></div>
+    <div class="modal-body">${bodyHtml}</div>
+    ${footerHtml ? `<div class="modal-footer">${footerHtml}</div>` : ''}
+  </div>`;
+  document.body.appendChild(overlay);
+}
+
+function showNewOnboardingModal() {
+  const body = `
+    <div class="form-group">
+      <label class="form-label">${t('companyName')} *</label>
+      <input class="form-input" id="newCompany" placeholder="Bijv. Acme Solutions" />
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">${t('contactPerson')} *</label>
+        <input class="form-input" id="newContact" placeholder="Naam contactpersoon" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">${t('contactEmail')} *</label>
+        <input class="form-input" id="newEmail" type="email" placeholder="email@bedrijf.nl" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">${t('country')} *</label>
+        <select class="form-select" id="newCountry">
+          <option>Nederland</option><option>België</option><option>Duitsland</option><option>Zweden</option><option>Verenigd Koninkrijk</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">${t('goLiveDate')} *</label>
+        <input class="form-input" id="newGoLive" type="date" value="2026-10-01" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">${t('integrationType')} *</label>
+        <select class="form-select" id="newIntType">
+          <option value="">${t('selectIntType')}</option>
+          <option>Forms ERP</option><option>Partner Portal</option><option>API Integration</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">${t('contractType')} *</label>
+        <select class="form-select" id="newConType">
+          <option value="">${t('selectConType')}</option>
+          <option>Expert-Partner</option><option>Software-Partner</option>
+        </select>
+      </div>
+    </div>
+    <div style="padding:10px 12px;background:var(--primary-bg);border-radius:6px;font-size:12px;color:var(--primary);margin-top:8px">
+      <i class="fa-solid fa-info-circle"></i> ${t('backward_planning')}
+    </div>`;
+
+  const footer = `
+    <button class="btn btn-secondary" onclick="this.closest('.modal-overlay').remove()">${t('cancel')}</button>
+    <button class="btn btn-primary" onclick="createOnboarding()">${t('create')}</button>`;
+
+  showModal(t('createOnboarding'), body, footer);
+}
+
+function showInvitePartnerModal(partnerId) {
+  const p = getPartnerById(partnerId);
+  const body = `
+    <p style="margin-bottom:16px">Stuur een uitnodiging naar de contactpersoon van ${p.company}. Ze ontvangen inloggegevens per e-mail.</p>
+    <div class="form-group">
+      <label class="form-label">${t('contactPerson')}</label>
+      <input class="form-input" value="${p.contact}" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">${t('contactEmail')}</label>
+      <input class="form-input" value="${p.email}" />
+    </div>
+    <div style="padding:10px 12px;background:var(--success-bg);border-radius:6px;font-size:12px;color:var(--success)">
+      <i class="fa-solid fa-envelope"></i> Er wordt een uitnodigingsmail verstuurd via Outlook met inloggegevens en een link naar het partner portaal.
+    </div>`;
+  const footer = `
+    <button class="btn btn-secondary" onclick="this.closest('.modal-overlay').remove()">${t('cancel')}</button>
+    <button class="btn btn-primary" onclick="invitePartner('${partnerId}')">${t('invitePartner')}</button>`;
+  showModal(t('invitePartner'), body, footer);
+}
+
+function showDeadlineModal(taskId) {
+  const task = TASKS.find(t=>t.id===taskId);
+  const body = `
+    <div class="form-group">
+      <label class="form-label">${t('deadline')}</label>
+      <input class="form-input" type="date" id="newDeadline" value="${task.dueDate}" />
+    </div>
+    <p style="font-size:12px;color:var(--gray-500)">Handmatige aanpassing wordt vastgelegd in het audit trail.</p>`;
+  const footer = `
+    <button class="btn btn-secondary" onclick="this.closest('.modal-overlay').remove()">${t('cancel')}</button>
+    <button class="btn btn-primary" onclick="adjustDeadline('${taskId}')">${t('save')}</button>`;
+  showModal(t('adjustDeadline'), body, footer);
+}
+
+function showReassignModal(taskId) {
+  const task = TASKS.find(t=>t.id===taskId);
+  const internalUsers = USERS.filter(u=>u.role !== 'Partner' && u.active);
+  const body = `
+    <div class="form-group">
+      <label class="form-label">${t('assignee')}</label>
+      <select class="form-select" id="newAssignee">
+        ${internalUsers.map(u=>`<option value="${u.id}" ${u.id===task.assigneeId?'selected':''}>${u.name} (${u.role})</option>`).join('')}
+      </select>
+    </div>`;
+  const footer = `
+    <button class="btn btn-secondary" onclick="this.closest('.modal-overlay').remove()">${t('cancel')}</button>
+    <button class="btn btn-primary" onclick="reassignTask('${taskId}')">${t('save')}</button>`;
+  showModal(t('reassign'), body, footer);
+}
+
+function showAddUserModal() {
+  const body = `
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Naam *</label>
+        <input class="form-input" id="newUserName" placeholder="Volledige naam" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">E-mail *</label>
+        <input class="form-input" id="newUserEmail" type="email" placeholder="naam@spoq.nl" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">${t('role')} *</label>
+        <select class="form-select" id="newUserRole">
+          ${ROLES.map(r=>`<option>${r}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">${t('language')}</label>
+        <select class="form-select" id="newUserLocale">
+          <option value="nl">Nederlands</option><option value="en">English</option>
+        </select>
+      </div>
+    </div>`;
+  const footer = `
+    <button class="btn btn-secondary" onclick="this.closest('.modal-overlay').remove()">${t('cancel')}</button>
+    <button class="btn btn-primary" onclick="addUser()">${t('create')}</button>`;
+  showModal(t('addUser'), body, footer);
+}
+
+// =====================================================
+// ACTIONS
+// =====================================================
+
+function createOnboarding() {
+  const company = document.getElementById('newCompany').value || 'Nieuw Bedrijf BV';
+  const contact = document.getElementById('newContact').value || 'Contact Persoon';
+  const email = document.getElementById('newEmail').value || 'contact@bedrijf.nl';
+  const country = document.getElementById('newCountry').value;
+  const goLive = document.getElementById('newGoLive').value;
+  const intType = document.getElementById('newIntType').value || 'Forms ERP';
+  const conType = document.getElementById('newConType').value || 'Expert-Partner';
+
+  const newId = 'p' + (PARTNERS.length + 1);
+  PARTNERS.push({
+    id: newId, company, contact, email, country,
+    intType, conType, goLive,
+    status: 'on_track', phase: 1, progress: 0, archived: false
+  });
+
+  document.querySelector('.modal-overlay')?.remove();
+  showToast(`Onboarding aangemaakt voor ${company}! Taken gegenereerd vanuit template.`, 'success');
+  navigate('partners', { partnerId: newId });
+}
+
+function invitePartner(partnerId) {
+  document.querySelector('.modal-overlay')?.remove();
+  showToast(`Uitnodiging verstuurd! Partner ontvangt inloggegevens via Outlook e-mail.`, 'success');
+}
+
+function completeTask(taskId) {
+  const task = TASKS.find(t => t.id === taskId);
+  if (!task || task.status === 'blocked' || task.status === 'not_active') {
+    showToast('Taak kan niet worden afgerond (geblokkeerd of niet actief)', 'error');
+    return;
+  }
+  task.status = 'completed';
+  task.completedAt = new Date().toISOString().slice(0,10);
+
+  TASKS.filter(t => t.blockedBy === taskId).forEach(t => {
+    t.status = 'active';
+    showToast(`Volgende taak geactiveerd: ${t.name}`, 'success');
+  });
+
+  const partner = getPartnerById(task.partnerId);
+  if (partner) {
+    const total = TASKS.filter(t => t.partnerId === partner.id && t.main).length;
+    const done = TASKS.filter(t => t.partnerId === partner.id && t.main && t.status === 'completed').length;
+    partner.progress = Math.round((done / total) * 100);
+    if (partner.progress === 100) { partner.status = 'completed'; partner.archived = true; }
+    else if (partner.status === 'blocked' || partner.status === 'overdue') {
+      const hasBlocked = TASKS.some(t => t.partnerId === partner.id && t.main && (t.status === 'blocked' || t.status === 'overdue'));
+      if (!hasBlocked) partner.status = 'on_track';
+    }
+  }
+
+  showToast(t('taskCompleted'), 'success');
+  renderPage();
+}
+
+function completeSubtask(stId) {
+  const st = TASKS.find(t => t.id === stId);
+  if (!st) return;
+  if (st.status === 'completed') {
+    st.status = 'active';
+    st.completedAt = null;
+  } else {
+    st.status = 'completed';
+    st.completedAt = new Date().toISOString().slice(0,10);
+  }
+  showToast(st.status === 'completed' ? 'Subtaak afgerond' : 'Subtaak heropend', 'success');
+  renderPage();
+}
+
+function simulateUpload(delId) {
+  const del = DELIVERABLES.find(d => d.id === delId);
+  if (!del) return;
+  del.fulfilled = true;
+  del.uploadedBy = currentUser.id;
+  del.uploadedAt = new Date().toISOString().slice(0,10);
+
+  const task = TASKS.find(t => t.id === del.taskId);
+  if (task) {
+    const allDels = DELIVERABLES.filter(d => d.taskId === task.id);
+    if (allDels.every(d => d.fulfilled)) {
+      TASKS.filter(t => t.blockedBy === task.id).forEach(t => {
+        t.status = 'active';
+        showToast(`Downstream taak ontgrendeld: ${t.name}`, 'success');
+      });
+    }
+  }
+
+  showToast(t('fileUploaded') + ' Downstream taken worden gecontroleerd.', 'success');
+  renderPage();
+}
+
+function simulateUploadGeneric(taskId) {
+  showToast(t('fileUploaded'), 'success');
+}
+
+function adjustDeadline(taskId) {
+  const newDate = document.getElementById('newDeadline').value;
+  const task = TASKS.find(t => t.id === taskId);
+  if (task && newDate) {
+    task.dueDate = newDate;
+    document.querySelector('.modal-overlay')?.remove();
+    showToast(`Deadline aangepast naar ${newDate}`, 'success');
+    renderPage();
+  }
+}
+
+function reassignTask(taskId) {
+  const newAssigneeId = document.getElementById('newAssignee').value;
+  const task = TASKS.find(t => t.id === taskId);
+  if (task && newAssigneeId) {
+    task.assigneeId = newAssigneeId;
+    const user = getUserById(newAssigneeId);
+    task.assigneeRole = user.role;
+    document.querySelector('.modal-overlay')?.remove();
+    showToast(`Taak hertoegewezen aan ${user.name}`, 'success');
+    renderPage();
+  }
+}
+
+function addComment(taskId) {
+  const text = document.getElementById('newComment')?.value;
+  if (!text) return;
+  COMMENTS.push({
+    id: 'c' + (COMMENTS.length + 1),
+    taskId,
+    authorId: currentUser.id,
+    text,
+    time: new Date().toISOString().slice(0,16).replace('T',' '),
+    mentions: []
+  });
+  showToast('Reactie geplaatst', 'success');
+  renderPage();
+}
+
+function readNotification(nId) {
+  const n = NOTIFICATIONS.find(x => x.id === nId);
+  if (n) {
+    n.read = true;
+    if (n.taskId) navigate('tasks', { taskId: n.taskId });
+    else renderPage();
+  }
+}
+
+function markAllRead() {
+  NOTIFICATIONS.filter(n => n.userId === currentUser.id).forEach(n => n.read = true);
+  showToast('Alle meldingen als gelezen gemarkeerd', 'success');
+  renderSidebar();
+  renderPage();
+}
+
+function toggleUserActive(userId) {
+  const user = USERS.find(u => u.id === userId);
+  if (user) {
+    user.active = !user.active;
+    showToast(`${user.name} is nu ${user.active ? 'actief' : 'gedeactiveerd'}`, 'success');
+    renderPage();
+  }
+}
+
+function addUser() {
+  const name = document.getElementById('newUserName').value || 'Nieuwe Gebruiker';
+  const email = document.getElementById('newUserEmail').value || 'nieuw@spoq.nl';
+  const role = document.getElementById('newUserRole').value;
+  const locale = document.getElementById('newUserLocale').value;
+  const initials = name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  const colors = ['#3b82f6','#8b5cf6','#ec4899','#f59e0b','#10b981','#6366f1','#14b8a6','#f97316'];
+
+  USERS.push({
+    id: 'u' + (USERS.length + 1), name, role, initials,
+    color: colors[Math.floor(Math.random()*colors.length)],
+    email, locale, active: true
+  });
+  document.querySelector('.modal-overlay')?.remove();
+  showToast(`Gebruiker ${name} aangemaakt met rol ${role}`, 'success');
+  renderPage();
+}
+
+function switchLang(lang) {
+  LANG.current = lang;
+  renderSidebar();
+  renderPage();
+}
+
+function switchUser(userId) {
+  const user = USERS.find(u => u.id === userId);
+  if (user) {
+    currentUser = user;
+    portalMode = user.role === 'Partner';
+    currentPage = user.role === 'Partner' ? 'portal' : 'dashboard';
+    selectedPartnerId = null;
+    selectedTaskId = null;
+    renderSidebar();
+    renderPage();
+    showToast(`Bekijkt als: ${user.name} (${user.role})`, 'success');
+  }
+}
+
+// =====================================================
+// INIT
+// =====================================================
+
+renderSidebar();
+renderPage();
+</script>
+</body>
+</html>

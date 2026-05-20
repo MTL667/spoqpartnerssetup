@@ -1,0 +1,318 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  BDM
+  BD
+  IT
+  MARKETING
+  SALES
+  PARTNER
+}
+
+enum UserStatus {
+  ACTIVE
+  DEACTIVATED
+  PENDING_SETUP
+}
+
+model User {
+  id           String     @id @default(cuid())
+  email        String     @unique
+  passwordHash String
+  role         UserRole
+  locale       String     @default("nl")
+  status       UserStatus @default(ACTIVE)
+  partnerId    String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@index([email])
+  @@index([partnerId])
+}
+
+enum IntegrationType {
+  FORMS_ERP
+  PARTNER_PORTAL
+  API_INTEGRATION
+}
+
+enum ContractType {
+  EXPERT_PARTNER
+  SOFTWARE_PARTNER
+}
+
+enum PartnerLifecycleStatus {
+  ONBOARDING
+  ACTIVE
+  ARCHIVED
+}
+
+enum OnboardingStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum PhaseStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum TaskStatus {
+  NOT_ACTIVE
+  ACTIVE
+  BLOCKED
+  OVERDUE
+  COMPLETED
+}
+
+model Partner {
+  id                  String                 @id @default(cuid())
+  companyName         String
+  primaryContactEmail String
+  lifecycleStatus     PartnerLifecycleStatus @default(ONBOARDING)
+  createdAt           DateTime               @default(now())
+  updatedAt           DateTime               @updatedAt
+  onboardings         Onboarding[]
+
+  @@index([lifecycleStatus])
+}
+
+model Template {
+  id              String                  @id @default(cuid())
+  integrationType IntegrationType
+  contractType    ContractType
+  version         Int                     @default(1)
+  active          Boolean                 @default(true)
+  createdAt       DateTime                @default(now())
+  onboardings     Onboarding[]
+  blueprints      TemplateTaskBlueprint[]
+
+  @@unique([integrationType, contractType, version])
+  @@index([integrationType, contractType, active])
+}
+
+model TemplateTaskBlueprint {
+  id              String   @id @default(cuid())
+  templateId      String
+  template        Template @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  title           String
+  description     String?
+  phaseSequence   Int
+  ownerRole       UserRole
+  offsetDays      Int?
+  parentKey       String?
+  dependsOnKeys   String[]
+  checklistItems  String[]
+  deliverables    Json?
+  sortOrder       Int      @default(0)
+
+  @@index([templateId])
+}
+
+model Onboarding {
+  id                String           @id @default(cuid())
+  partnerId         String
+  partner           Partner          @relation(fields: [partnerId], references: [id])
+  integrationType   IntegrationType
+  contractType      ContractType
+  templateVersionId String?
+  template          Template?        @relation(fields: [templateVersionId], references: [id])
+  targetGoLiveDate  DateTime?
+  status            OnboardingStatus @default(ACTIVE)
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  phases            OnboardingPhase[]
+
+  @@index([partnerId])
+  @@index([status])
+}
+
+model OnboardingPhase {
+  id           String      @id @default(cuid())
+  onboardingId String
+  onboarding   Onboarding  @relation(fields: [onboardingId], references: [id])
+  name         String
+  sequence     Int
+  status       PhaseStatus @default(NOT_STARTED)
+  tasks        Task[]
+
+  @@unique([onboardingId, sequence])
+  @@index([onboardingId])
+}
+
+model Task {
+  id                    String           @id @default(cuid())
+  phaseId               String
+  phase                 OnboardingPhase  @relation(fields: [phaseId], references: [id])
+  title                 String
+  description           String?
+  ownerRole             UserRole
+  assigneeId            String?
+  status                TaskStatus       @default(NOT_ACTIVE)
+  dueDate               DateTime?
+  dueDateOverride       Boolean          @default(false)
+  offsetDays            Int?
+  parentTaskId          String?
+  parentTask            Task?            @relation("SubTasks", fields: [parentTaskId], references: [id])
+  subTasks              Task[]           @relation("SubTasks")
+  predecessors          TaskDependency[] @relation("Successors")
+  successors            TaskDependency[] @relation("Predecessors")
+  checklistItems        ChecklistItem[]
+  deliverableRequirements DeliverableRequirement[]
+  createdAt             DateTime         @default(now())
+  updatedAt             DateTime         @updatedAt
+
+  @@index([phaseId])
+  @@index([assigneeId])
+  @@index([status])
+  @@index([parentTaskId])
+}
+
+model TaskDependency {
+  id                String @id @default(cuid())
+  predecessorTaskId String
+  predecessorTask   Task   @relation("Predecessors", fields: [predecessorTaskId], references: [id])
+  successorTaskId   String
+  successorTask     Task   @relation("Successors", fields: [successorTaskId], references: [id])
+
+  @@unique([predecessorTaskId, successorTaskId])
+}
+
+model ChecklistItem {
+  id        String    @id @default(cuid())
+  taskId    String
+  task      Task      @relation(fields: [taskId], references: [id])
+  text      String
+  checked   Boolean   @default(false)
+  checkedBy String?
+  checkedAt DateTime?
+
+  @@index([taskId])
+}
+
+model DeliverableRequirement {
+  id             String        @id @default(cuid())
+  taskId         String
+  task           Task          @relation(fields: [taskId], references: [id])
+  title          String
+  requiredByRole UserRole
+  fulfilled      Boolean       @default(false)
+  deliverables   Deliverable[]
+
+  @@index([taskId])
+}
+
+model Deliverable {
+  id            String                 @id @default(cuid())
+  requirementId String
+  requirement   DeliverableRequirement @relation(fields: [requirementId], references: [id])
+  fileName      String
+  storageRef    String
+  uploadedBy    String
+  uploadedAt    DateTime               @default(now())
+
+  @@index([requirementId])
+}
+
+model BdPartnerAssignment {
+  id         String   @id @default(cuid())
+  bdUserId   String
+  partnerId  String
+  assignedAt DateTime @default(now())
+
+  @@unique([bdUserId, partnerId])
+  @@index([bdUserId])
+  @@index([partnerId])
+}
+
+enum NotificationChannel {
+  IN_APP
+  EMAIL
+}
+
+enum NotificationType {
+  TASK_ACTIVATED
+  TASK_OVERDUE
+  DEADLINE_APPROACHING
+  PREREQUISITE_FULFILLED
+  MENTION
+  DELIVERABLE_UPLOADED
+}
+
+enum NotificationStatus {
+  UNREAD
+  READ
+  SENT
+  FAILED
+}
+
+enum CommentVisibility {
+  INTERNAL
+  ALL
+}
+
+model Notification {
+  id          String             @id @default(cuid())
+  recipientId String
+  channel     NotificationChannel @default(IN_APP)
+  type        NotificationType
+  status      NotificationStatus @default(UNREAD)
+  title       String
+  message     String
+  entityType  String?
+  entityId    String?
+  sentAt      DateTime?
+  readAt      DateTime?
+  createdAt   DateTime           @default(now())
+
+  @@index([recipientId, status])
+  @@index([recipientId, createdAt])
+}
+
+model Comment {
+  id               String            @id @default(cuid())
+  taskId           String
+  authorId         String
+  visibilityScope  CommentVisibility @default(INTERNAL)
+  text             String
+  mentions         Mention[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  @@index([taskId])
+  @@index([authorId])
+}
+
+model Mention {
+  id           String  @id @default(cuid())
+  commentId    String
+  comment      Comment @relation(fields: [commentId], references: [id])
+  targetUserId String
+
+  @@index([commentId])
+  @@index([targetUserId])
+}
+
+model AuditEvent {
+  id         String   @id @default(cuid())
+  actorId    String
+  action     String
+  entityType String
+  entityId   String
+  metadata   Json?
+  createdAt  DateTime @default(now())
+
+  @@index([actorId])
+  @@index([entityType, entityId])
+  @@index([createdAt])
+}

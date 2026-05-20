@@ -1,0 +1,40 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: spoq
+      POSTGRES_PASSWORD: spoq
+      POSTGRES_DB: spoq_onboarding
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+      target: development
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://spoq:spoq@db:5432/spoq_onboarding
+      REDIS_URL: redis://redis:6379
+      SESSION_SECRET: dev-secret-change-in-production
+      SESSION_TIMEOUT_MINUTES: "30"
+      NODE_ENV: development
+      CORS_ORIGIN: http://localhost:5173
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - ./apps/api:/app/apps/api
+      - /app/apps/api/node_modules
+
+volumes:
+  pgdata:
